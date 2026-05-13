@@ -172,11 +172,7 @@ while ( have_posts() ) :
 	<main id="primary" class="site-main single-book-page">
 		<nav class="site-nav single-book-nav-shell" id="siteNav" aria-label="<?php esc_attr_e( 'Book navigation', 'alfred' ); ?>">
 			<div class="nav-logo"><a href="<?php echo esc_url( home_url( '/' ) ); ?>">Alfred Basta</a></div>
-			<ul id="navLinks" class="nav-links">
-				<?php foreach ( alfred_get_front_page_nav_links() as $link ) : ?>
-					<li><a href="<?php echo esc_url( alfred_get_front_page_anchor_url( $link['anchor'] ) ); ?>"><?php echo esc_html( $link['label'] ); ?></a></li>
-				<?php endforeach; ?>
-			</ul>
+			<?php alfred_front_page_navigation(); ?>
 			<form class="nav-search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>" role="search">
 				<label class="screen-reader-text" for="site-nav-search-book"><?php esc_html_e( 'Search the site', 'alfred' ); ?></label>
 				<input id="site-nav-search-book" class="nav-search__input" type="search" name="s" placeholder="<?php esc_attr_e( 'Search site', 'alfred' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>">
@@ -331,11 +327,7 @@ while ( have_posts() ) :
 
 				<div class="footer-col">
 					<div class="footer-col-title">Navigate</div>
-					<ul class="footer-links">
-						<?php foreach ( alfred_get_front_page_nav_links() as $link ) : ?>
-							<li><a href="<?php echo esc_url( alfred_get_front_page_anchor_url( $link['anchor'] ) ); ?>"><?php echo esc_html( $link['label'] ); ?></a></li>
-						<?php endforeach; ?>
-					</ul>
+					<?php alfred_front_page_navigation( 'footerNavigationLinks', 'footer-links' ); ?>
 				</div>
 
 						<div class="footer-col">

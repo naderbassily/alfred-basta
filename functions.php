@@ -364,11 +364,19 @@ add_action( 'wp_enqueue_scripts', 'alfred_scripts' );
 
 /**
  * Fallback menu for the homepage anchor navigation.
+ *
+ * @param array $args Menu arguments passed by wp_nav_menu().
  */
-function alfred_front_page_menu_fallback() {
-	$links = alfred_get_front_page_nav_links();
+function alfred_front_page_menu_fallback( $args = array() ) {
+	$links      = alfred_get_front_page_nav_links();
+	$menu_id    = ! empty( $args['menu_id'] ) ? $args['menu_id'] : 'navLinks';
+	$menu_class = ! empty( $args['menu_class'] ) ? $args['menu_class'] : 'nav-links';
 
-	echo '<ul id="navLinks" class="nav-links">';
+	printf(
+		'<ul id="%1$s" class="%2$s">',
+		esc_attr( $menu_id ),
+		esc_attr( $menu_class )
+	);
 
 	foreach ( $links as $link ) {
 		printf(
@@ -379,6 +387,26 @@ function alfred_front_page_menu_fallback() {
 	}
 
 	echo '</ul>';
+}
+
+/**
+ * Render the WordPress-managed front page navigation menu.
+ *
+ * @param string $menu_id    Menu element ID.
+ * @param string $menu_class Menu element class.
+ * @return void
+ */
+function alfred_front_page_navigation( $menu_id = 'navLinks', $menu_class = 'nav-links' ) {
+	wp_nav_menu(
+		array(
+			'theme_location' => 'front-page-menu',
+			'container'      => false,
+			'menu_id'        => $menu_id,
+			'menu_class'     => $menu_class,
+			'fallback_cb'    => 'alfred_front_page_menu_fallback',
+			'depth'          => 1,
+		)
+	);
 }
 
 /**

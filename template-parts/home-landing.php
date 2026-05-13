@@ -22,16 +22,7 @@ $book_query       = new WP_Query(
 	<nav class="site-nav" id="siteNav" aria-label="<?php esc_attr_e( 'Homepage navigation', 'alfred' ); ?>">
 		<div class="nav-logo">Alfred Basta</div>
 		<?php
-		wp_nav_menu(
-			array(
-				'theme_location' => 'front-page-menu',
-				'container'      => false,
-				'menu_id'        => 'navLinks',
-				'menu_class'     => 'nav-links',
-				'fallback_cb'    => 'alfred_front_page_menu_fallback',
-				'depth'          => 1,
-			)
-		);
+		alfred_front_page_navigation();
 		?>
 		<form class="nav-search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>" role="search">
 			<label class="screen-reader-text" for="site-nav-search-home"><?php esc_html_e( 'Search the site', 'alfred' ); ?></label>
@@ -398,13 +389,7 @@ $book_query       = new WP_Query(
 
 			<div class="footer-col">
 				<div class="footer-col-title">Navigate</div>
-				<ul class="footer-links">
-					<li><a href="#home">Home</a></li>
-					<li><a href="#books">Books</a></li>
-					<li><a href="#about">About Alfred</a></li>
-					<li><a href="#blog">Blog</a></li>
-					<li><a href="#contact">Contact</a></li>
-				</ul>
+				<?php alfred_front_page_navigation( 'footerNavigationLinks', 'footer-links' ); ?>
 			</div>
 
 			<div class="footer-col">
