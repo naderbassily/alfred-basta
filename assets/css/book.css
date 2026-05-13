@@ -374,8 +374,8 @@ body.alfred-about-page {
 
 .book-archive-layout {
 	display: grid;
-	grid-template-columns: minmax(250px, 300px) minmax(0, 1fr);
-	gap: 42px;
+	grid-template-columns: minmax(270px, 320px) minmax(0, 1fr);
+	gap: 48px;
 	align-items: start;
 	margin-top: 40px;
 }
@@ -393,18 +393,28 @@ body.alfred-about-page {
 
 .book-archive-controls {
 	display: grid;
-	gap: 20px;
+	gap: 24px;
 	z-index: 12;
-	padding: 22px 24px;
-	border: 1px solid rgba(201, 162, 84, 0.14);
-	border-radius: 24px;
-	background: rgba(247, 244, 239, 0.92);
+	padding: 28px;
+	border: 1px solid rgba(201, 162, 84, 0.18);
+	border-radius: 8px;
+	background:
+		linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(247, 244, 239, 0.96)),
+		var(--offwhite);
+	box-shadow: 0 24px 70px rgba(17, 17, 17, 0.08);
 	backdrop-filter: blur(18px);
+}
+
+.book-archive-search,
+.book-archive-sort,
+.book-archive-filters {
+	padding-bottom: 24px;
+	border-bottom: 1px solid rgba(201, 162, 84, 0.16);
 }
 
 .book-archive-controls__label {
 	display: block;
-	margin-bottom: 10px;
+	margin-bottom: 12px;
 	color: var(--black2);
 	font-size: 0.78rem;
 	font-weight: 700;
@@ -421,35 +431,36 @@ body.alfred-about-page {
 	min-width: 0;
 }
 
-.book-archive-search__input {
+.book-archive-search .book-archive-search__input {
+	-webkit-appearance: none;
+	appearance: none;
 	width: 100%;
-	padding: 15px 18px;
-	border: 1px solid rgba(201, 162, 84, 0.24);
-	border-radius: 22px;
-	background: rgba(255, 255, 255, 0.94);
+	min-height: 48px;
+	padding: 0 18px 0 24px;
+	border: 1px solid rgba(201, 162, 84, 0.28);
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.98);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 	color: var(--black2);
 	font-size: 0.98rem;
 	font-weight: 500;
+	outline: 0;
 }
 
-.book-archive-search__input::placeholder {
+.book-archive-search .book-archive-search__input::placeholder {
 	color: rgba(17, 17, 17, 0.52);
 }
 
-.book-archive-search__input:focus {
+.book-archive-search .book-archive-search__input:focus,
+.book-archive-search .book-archive-search__input:focus-visible {
 	outline: none;
 	border-color: var(--gold);
 	box-shadow: 0 0 0 4px rgba(201, 162, 84, 0.14);
 }
 
-.book-archive-sort,
-.book-archive-filters {
-	min-width: 0;
-}
-
 .book-archive-select-wrap {
 	position: relative;
-	max-width: 340px;
+	max-width: none;
 }
 
 .book-archive-select-wrap::after {
@@ -467,10 +478,11 @@ body.alfred-about-page {
 
 .book-archive-select {
 	width: 100%;
-	padding: 15px 52px 15px 18px;
-	border: 1px solid rgba(201, 162, 84, 0.26);
+	min-height: 48px;
+	padding: 0 52px 0 24px;
+	border: 1px solid rgba(201, 162, 84, 0.28);
 	border-radius: 999px;
-	background: rgba(255, 255, 255, 0.94);
+	background: rgba(255, 255, 255, 0.98);
 	color: var(--black2);
 	font-size: 0.98rem;
 	font-weight: 500;
@@ -486,41 +498,50 @@ body.alfred-about-page {
 .book-archive-checkboxes {
 	display: grid;
 	grid-template-columns: 1fr;
-	gap: 12px;
+	gap: 10px;
 }
 
 .book-archive-checkbox {
 	display: flex;
 	align-items: center;
-	gap: 10px;
+	gap: 12px;
 	width: 100%;
 	min-height: 0;
-	padding: 0;
-	border: 0;
-	border-radius: 0;
-	background: transparent;
+	padding: 11px 14px;
+	border: 1px solid rgba(201, 162, 84, 0.14);
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.58);
 	color: var(--black2);
 	font-size: 0.9rem;
 	font-weight: 500;
 	cursor: pointer;
 	text-align: left;
 	justify-content: flex-start;
-	transition: color 0.2s ease;
+	transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .book-archive-checkbox:hover {
+	border-color: rgba(201, 162, 84, 0.36);
+	background: rgba(255, 255, 255, 0.9);
 	color: var(--gold2);
 }
 
 .book-archive-checkbox:has(input:checked) {
+	border-color: rgba(201, 162, 84, 0.56);
+	background: rgba(201, 162, 84, 0.12);
 	color: var(--gold2);
 }
 
 .book-archive-checkbox input {
-	width: 16px;
-	height: 16px;
+	width: 15px;
+	height: 15px;
 	margin: 0;
 	accent-color: var(--gold);
+	flex: 0 0 auto;
+}
+
+.book-archive-checkbox span {
+	line-height: 1.35;
 }
 
 .book-archive-controls__empty {
@@ -529,10 +550,14 @@ body.alfred-about-page {
 }
 
 .book-archive-reset {
-	padding: 0 0 4px;
-	border: 0;
+	display: inline-flex;
+	align-items: center;
+	min-height: 40px;
+	padding: 0 18px;
+	border: 1px solid rgba(201, 162, 84, 0.32);
+	border-radius: 999px;
 	background: transparent;
-	color: var(--gray2);
+	color: var(--black2);
 	font-size: 0.82rem;
 	font-weight: 700;
 	letter-spacing: 0.12em;
@@ -543,18 +568,20 @@ body.alfred-about-page {
 
 .book-archive-reset:hover,
 .book-archive-reset:focus {
-	color: var(--gold2);
+	background: var(--gold);
+	border-color: var(--gold);
+	color: var(--black);
 	outline: none;
 }
 
 .book-archive-sidebar-actions {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-between;
+	justify-content: flex-start;
 	align-items: center;
 	gap: 12px 18px;
-	padding-top: 6px;
-	border-top: 1px solid rgba(201, 162, 84, 0.16);
+	padding-top: 2px;
+	border-top: 0;
 }
 
 .book-archive-backtop {
