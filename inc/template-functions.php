@@ -26,6 +26,10 @@ function alfred_body_classes( $classes ) {
 		$classes[] = 'alfred-about-page';
 	}
 
+	if ( function_exists( 'alfred_is_contact_page' ) && alfred_is_contact_page() ) {
+		$classes[] = 'alfred-contact-page';
+	}
+
 	return $classes;
 }
 add_filter( 'body_class', 'alfred_body_classes' );

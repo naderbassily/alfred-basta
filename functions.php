@@ -163,6 +163,15 @@ function alfred_is_about_page() {
 }
 
 /**
+ * Check whether the current request is the custom Contact page.
+ *
+ * @return bool
+ */
+function alfred_is_contact_page() {
+	return is_page( 'contact' );
+}
+
+/**
  * Shared navigation links used across the landing page and book layout.
  *
  * @return array<int, array{anchor:string,label:string}>
@@ -306,7 +315,7 @@ function alfred_scripts() {
 	wp_enqueue_style( 'alfred-style', get_stylesheet_uri(), array(), _S_VERSION );
 	wp_style_add_data( 'alfred-style', 'rtl', 'replace' );
 
-	if ( alfred_is_landing_page() || alfred_is_book_layout() || alfred_is_about_page() ) {
+	if ( alfred_is_landing_page() || alfred_is_book_layout() || alfred_is_about_page() || alfred_is_contact_page() ) {
 		wp_enqueue_style(
 			'alfred-fonts',
 			'https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap',
@@ -331,7 +340,7 @@ function alfred_scripts() {
 			_S_VERSION,
 			true
 		);
-	} elseif ( alfred_is_book_layout() || alfred_is_about_page() ) {
+	} elseif ( alfred_is_book_layout() || alfred_is_about_page() || alfred_is_contact_page() ) {
 		wp_enqueue_style(
 			'alfred-front-page',
 			get_template_directory_uri() . '/assets/css/front-page.css',
