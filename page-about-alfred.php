@@ -11,32 +11,26 @@ while ( have_posts() ) :
 	the_post();
 
 	$hero_kicker = 'About Alfred';
-	$hero_intro  = has_excerpt() ? get_the_excerpt() : wp_trim_words( wp_strip_all_tags( get_the_content() ), 42 );
+	$hero_intro  = '';
 	$hero_image  = '';
 
 	if ( function_exists( 'get_field' ) ) {
-		$about_hero_home = get_field( 'about_hero_image', get_the_ID() );
-
-		if ( is_array( $about_hero_home ) && ! empty( $about_hero_home['url'] ) ) {
-			$hero_image = $about_hero_home['url'];
-		} elseif ( is_numeric( $about_hero_home ) ) {
-			$hero_image = wp_get_attachment_image_url( (int) $about_hero_home, 'large' );
-		} elseif ( is_string( $about_hero_home ) ) {
-			$hero_image = $about_hero_home;
-		}
+		$hero_intro = get_field( 'hero_introduction', get_the_ID() );
 	}
 
-	if ( ! $hero_image ) {
-		$about_hero_home_meta = get_post_meta( get_the_ID(), 'about_hero_image', true );
-
-		if ( is_numeric( $about_hero_home_meta ) ) {
-			$hero_image = wp_get_attachment_image_url( (int) $about_hero_home_meta, 'large' );
-		} elseif ( is_string( $about_hero_home_meta ) ) {
-			$hero_image = trim( $about_hero_home_meta );
-		}
+	if ( is_array( $hero_intro ) ) {
+		$hero_intro = '';
 	}
 
-	if ( ! $hero_image && has_post_thumbnail() ) {
+	if ( ! $hero_intro ) {
+		$hero_intro = get_post_meta( get_the_ID(), 'hero_introduction', true );
+	}
+
+	if ( ! $hero_intro ) {
+		$hero_intro = has_excerpt() ? get_the_excerpt() : wp_trim_words( wp_strip_all_tags( get_the_content() ), 42 );
+	}
+
+	if ( has_post_thumbnail() ) {
 		$hero_image = get_the_post_thumbnail_url( get_the_ID(), 'large' );
 	}
 
@@ -67,7 +61,7 @@ while ( have_posts() ) :
 					<h1 class="book-hero__title reveal reveal-delay-1"><?php the_title(); ?></h1>
 
 					<?php if ( $hero_intro ) : ?>
-						<div class="book-hero__description reveal reveal-delay-2">
+						<div class="book-hero__description reveal reveal-delay-2 visible">
 							<?php echo wp_kses_post( wpautop( $hero_intro ) ); ?>
 						</div>
 					<?php endif; ?>
