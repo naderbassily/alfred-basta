@@ -11,9 +11,23 @@ $posts_page_url  = ! empty( $args['posts_page_url'] ) ? $args['posts_page_url'] 
 $book_archive_url = post_type_exists( 'book' ) ? alfred_get_book_archive_url() : '';
 $book_query       = new WP_Query(
 	array(
-		'post_type'      => 'book',
-		'posts_per_page' => 4,
-		'post_status'    => 'publish',
+		'post_type'           => 'book',
+		'posts_per_page'      => 4,
+		'post_status'         => 'publish',
+		'ignore_sticky_posts' => true,
+		'meta_query'          => array(
+			'relation' => 'OR',
+			array(
+				'key'     => 'feature_on_homepage',
+				'value'   => array( '1', 1, 'Yes', 'yes', 'true', true ),
+				'compare' => 'IN',
+			),
+			array(
+				'key'     => 'feature_on_homepage',
+				'value'   => '"Yes"',
+				'compare' => 'LIKE',
+			),
+		),
 	)
 );
 ?>
