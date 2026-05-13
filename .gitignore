@@ -1,0 +1,15 @@
+.DS_Store
+Thumbs.db
+
+node_modules/
+vendor/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+*.map
+
+.idea/
+.vscode/
