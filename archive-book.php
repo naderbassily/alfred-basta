@@ -114,7 +114,7 @@ $active_filters  = ! empty( $selected_genres ) || '' !== $selected_search;
 		<?php alfred_front_page_navigation(); ?>
 		<form class="nav-search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>" role="search">
 			<label class="screen-reader-text" for="site-nav-search-archive"><?php esc_html_e( 'Search the site', 'alfred' ); ?></label>
-			<input id="site-nav-search-archive" class="nav-search__input" type="search" name="s" placeholder="<?php esc_attr_e( 'Search site', 'alfred' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>">
+			<input id="site-nav-search-archive" class="nav-search__input" type="search" name="s" placeholder="<?php esc_attr_e( 'Search', 'alfred' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>">
 			<button type="submit" class="nav-search__submit"><?php esc_html_e( 'Search', 'alfred' ); ?></button>
 		</form>
 		<button class="nav-toggle" id="navToggle" type="button" aria-label="<?php esc_attr_e( 'Toggle menu', 'alfred' ); ?>" aria-expanded="false" aria-controls="navLinks">
