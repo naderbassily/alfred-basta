@@ -1,70 +1,98 @@
-[![Build Status](https://travis-ci.org/Automattic/_s.svg?branch=master)](https://travis-ci.org/Automattic/_s)
+# Alfred Basta WordPress Theme
 
-_s
-===
+Custom WordPress theme for Dr. Alfred Basta, professor, author, cybersecurity expert, and Ph.D. in Cryptography.
 
-Hi. I'm a starter theme called `_s`, or `underscores`, if you like. I'm a theme meant for hacking so don't use me as a Parent Theme. Instead try turning me into the next, most awesome, WordPress theme out there. That's what I'm here for.
+The theme presents Alfred's work through a cinematic author homepage, a browsable book catalog, individual book pages, and a dedicated biography page. It began from the Underscores starter theme and has been customized for a polished editorial site focused on books, scholarship, faith, cybersecurity, and teaching.
 
-My ultra-minimal CSS might make me look like theme tartare but that means less stuff to get in your way when you're designing your awesome theme. Here are some of the other more interesting things you'll find here:
+## Theme Overview
 
-* A modern workflow with a pre-made command-line interface to turn your project into a more pleasant experience.
-* A just right amount of lean, well-commented, modern, HTML5 templates.
-* A custom header implementation in `inc/custom-header.php`. Just add the code snippet found in the comments of `inc/custom-header.php` to your `header.php` template.
-* Custom template tags in `inc/template-tags.php` that keep your templates clean and neat and prevent code duplication.
-* Some small tweaks in `inc/template-functions.php` that can improve your theming experience.
-* A script at `js/navigation.js` that makes your menu a toggled dropdown on small screens (like your phone), ready for CSS artistry. It's enqueued in `functions.php`.
-* 2 sample layouts in `sass/layouts/` made using CSS Grid for a sidebar on either side of your content. Just uncomment the layout of your choice in `sass/style.scss`.
-Note: `.no-sidebar` styles are automatically loaded.
-* Smartly organized starter CSS in `style.css` that will help you to quickly get your design off the ground.
-* Full support for `WooCommerce plugin` integration with hooks in `inc/woocommerce.php`, styling override woocommerce.css with product gallery features (zoom, swipe, lightbox) enabled.
-* Licensed under GPLv2 or later. :) Use it to make something cool.
+- Homepage landing experience with hero imagery, featured books, biography preview, testimonials, newsletter prompt, blog preview, and contact footer.
+- Custom book archive with live search, genre filtering, sorting, and progressive "show more" controls.
+- Single book layout with cover art, metadata, purchase link support, overview content, and related books.
+- About Alfred page with custom hero image support and biography content.
+- Shared visual direction built around black, white, and gold tones, editorial serif typography, and reveal animations.
+- Compatibility with standard WordPress posts/pages plus ACF-powered book metadata where available.
 
-Installation
----------------
+## Key Files
 
-### Requirements
+- `front-page.php` renders the site homepage and falls back to editor content when the front page has manually authored content.
+- `template-parts/home-landing.php` contains the custom homepage sections.
+- `archive-book.php` renders the book catalog and includes the current archive filtering behavior.
+- `single-book.php` renders individual book detail pages.
+- `page-about-alfred.php` renders the custom biography page for `/about-alfred/`.
+- `assets/css/front-page.css` contains landing page and shared custom layout styles.
+- `assets/css/book.css` contains book archive, single book, and about page styles.
+- `assets/js/front-page.js` handles navigation, reveal animations, smooth scrolling, hero parallax, and newsletter form UI.
+- `functions.php` registers theme support, navigation locations, custom routing helpers, asset loading, book archive fallback routing, and temporary book import utilities.
 
-`_s` requires the following dependencies:
+## Content Model
 
-- [Node.js](https://nodejs.org/)
-- [Composer](https://getcomposer.org/)
+The theme expects a custom post type named `book`. The post type is currently managed outside the theme, likely through WordPress/ACF configuration.
 
-### Quick Start
+Recommended book fields:
 
-Clone or download this repository, change its name to something else (like, say, `megatherium-is-awesome`), and then you'll need to do a six-step find and replace on the name in all the templates.
+- `amazon_url` or `amazon_link`
+- `asin`
+- `description`
+- `publisher`
+- `pages` or `page_count`
+- `publication_date`, `release_date`, `published_date`, or `publish_date`
+- `isbn` or `isbn_13`
+- `category`, `genre`, `topic`, or a taxonomy such as `book-genre`
 
-1. Search for `'_s'` (inside single quotations) to capture the text domain and replace with: `'megatherium-is-awesome'`.
-2. Search for `_s_` to capture all the functions names and replace with: `megatherium_is_awesome_`.
-3. Search for `Text Domain: _s` in `style.css` and replace with: `Text Domain: megatherium-is-awesome`.
-4. Search for <code>&nbsp;_s</code> (with a space before it) to capture DocBlocks and replace with: <code>&nbsp;Megatherium_is_Awesome</code>.
-5. Search for `_s-` to capture prefixed handles and replace with: `megatherium-is-awesome-`.
-6. Search for `_S_` (in uppercase) to capture constants and replace with: `MEGATHERIUM_IS_AWESOME_`.
+Book covers should be assigned as featured images. The archive and single templates include graceful placeholders when a cover is missing.
 
-Then, update the stylesheet header in `style.css`, the links in `footer.php` with your own information and rename `_s.pot` from `languages` folder to use the theme's slug. Next, update or delete this readme.
+## Navigation
 
-### Setup
+The theme registers two menu locations:
 
-To start using all the tools that come with `_s`  you need to install the necessary Node.js and Composer dependencies :
+- `Primary`
+- `Front Page Menu`
+
+The custom landing/book/about layouts use the front page navigation pattern. If no menu is assigned, a fallback menu links to Home, Books, About Alfred, Blog, and Contact.
+
+## Local Development
+
+This repository is intended to track only the custom theme folder:
 
 ```sh
-$ composer install
-$ npm install
+app/public/wp-content/themes/alfred
 ```
 
-### Available CLI commands
+It does not include WordPress core, uploads, database content, or plugins.
 
-`_s` comes packed with CLI commands tailored for WordPress theme development :
+The theme includes the inherited Underscores development configuration:
 
-- `composer lint:wpcs` : checks all PHP files against [PHP Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/).
-- `composer lint:php` : checks all PHP files for syntax errors.
-- `composer make-pot` : generates a .pot file in the `languages/` directory.
-- `npm run compile:css` : compiles SASS files to css.
-- `npm run compile:rtl` : generates an RTL stylesheet.
-- `npm run watch` : watches all SASS files and recompiles them to css when they change.
-- `npm run lint:scss` : checks all SASS files against [CSS Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/css/).
-- `npm run lint:js` : checks all JavaScript files against [JavaScript Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/javascript/).
-- `npm run bundle` : generates a .zip archive for distribution, excluding development and system files.
+```sh
+npm install
+composer install
+```
 
-Now you're ready to go! The next step is easy to say, but harder to do: make an awesome WordPress theme. :)
+Useful commands:
 
-Good luck!
+```sh
+npm run lint:js
+npm run compile:rtl
+composer lint:php
+composer lint:wpcs
+```
+
+Note: the current custom CSS is written directly in `assets/css/`, not compiled from Sass.
+
+## Current Cleanup Notes
+
+The theme is functional, but several items are queued for polish:
+
+- Remove hard-coded local image and CSV paths.
+- Extract repeated nav/footer markup into shared template parts.
+- Move the inline book archive JavaScript into a dedicated enqueued asset.
+- Convert temporary book import routines into a safer migration/admin workflow or remove them after data is finalized.
+- Update `package.json` and other inherited starter metadata to match this project.
+
+## Repository
+
+GitHub: <https://github.com/naderbassily/alfred-basta>
+
+## License
+
+GPL-2.0-or-later, inherited from the Underscores starter theme.
