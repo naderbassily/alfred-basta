@@ -10,12 +10,25 @@ get_header();
 while ( have_posts() ) :
 	the_post();
 
-	$hero_kicker = 'About Alfred';
+	$hero_kicker = '';
 	$hero_intro  = '';
 	$hero_image  = '';
 
 	if ( function_exists( 'get_field' ) ) {
+		$hero_kicker = get_field( 'about_hero_kicker', get_the_ID() );
 		$hero_intro = get_field( 'hero_introduction', get_the_ID() );
+	}
+
+	if ( is_array( $hero_kicker ) ) {
+		$hero_kicker = '';
+	}
+
+	if ( ! $hero_kicker ) {
+		$hero_kicker = get_post_meta( get_the_ID(), 'about_hero_kicker', true );
+	}
+
+	if ( ! $hero_kicker ) {
+		$hero_kicker = 'Biography';
 	}
 
 	if ( is_array( $hero_intro ) ) {
@@ -57,7 +70,9 @@ while ( have_posts() ) :
 			<div class="book-hero__backdrop"></div>
 			<div class="container book-hero__container about-page-hero__container">
 				<div class="book-hero__content about-page-hero__content">
-					<div class="book-hero__eyebrow reveal"><?php echo esc_html( $hero_kicker ); ?></div>
+					<?php if ( $hero_kicker ) : ?>
+						<div class="book-hero__eyebrow reveal"><?php echo esc_html( $hero_kicker ); ?></div>
+					<?php endif; ?>
 					<h1 class="book-hero__title reveal reveal-delay-1"><?php the_title(); ?></h1>
 
 					<?php if ( $hero_intro ) : ?>
