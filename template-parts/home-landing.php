@@ -9,6 +9,59 @@ $hero_image_uri  = ! empty( $args['hero_image_uri'] ) ? $args['hero_image_uri'] 
 $about_image_uri = ! empty( $args['about_image_uri'] ) ? $args['about_image_uri'] : '';
 $posts_page_url  = ! empty( $args['posts_page_url'] ) ? $args['posts_page_url'] : '#blog';
 $book_archive_url = post_type_exists( 'book' ) ? alfred_get_book_archive_url() : '';
+$front_page_id    = get_queried_object_id();
+$about_quote      = 'Dr. Basta represents a rare synthesis of scholarly rigor, practical expertise, and spiritual depth demonstrating that excellence in technical mastery and spiritual formation is not only compatible, but mutually enriching.';
+$about_summary    = 'Dr. Alfred Basta is a distinguished Professor of Cybersecurity, Computer Science, and Mathematics with a Ph.D. in Cryptography. With nearly three decades of academic leadership at Purdue Global, Georgia State University, and UC San Diego, he has established himself as a towering figure in cybersecurity education and a deeply pastoral voice in Christian ministry.';
+$about_stats      = array(
+	array(
+		'field'    => 'books_published_count',
+		'value'    => '40+',
+		'label'    => 'Books Published',
+	),
+	array(
+		'field'    => 'certifications_count',
+		'value'    => '60+',
+		'label'    => 'Certifications',
+	),
+	array(
+		'field'    => 'years_teaching_experience',
+		'value'    => '28+',
+		'label'    => 'Years Teaching',
+	),
+	array(
+		'field'    => 'patents_and_copyrights',
+		'value'    => '3',
+		'label'    => 'Patents & Copyrights',
+	),
+);
+
+if ( $front_page_id ) {
+	$about_quote_field   = function_exists( 'get_field' ) ? get_field( 'about_quote', $front_page_id ) : get_post_meta( $front_page_id, 'about_quote', true );
+	$about_summary_field = function_exists( 'get_field' ) ? get_field( 'about_alfred_summary', $front_page_id ) : get_post_meta( $front_page_id, 'about_alfred_summary', true );
+
+	if ( is_string( $about_quote_field ) && '' !== trim( $about_quote_field ) ) {
+		$about_quote = trim( $about_quote_field );
+	}
+
+	if ( is_string( $about_summary_field ) && '' !== trim( $about_summary_field ) ) {
+		$about_summary = trim( $about_summary_field );
+	}
+
+	foreach ( $about_stats as $index => $about_stat ) {
+		$stat_value = function_exists( 'get_field' ) ? get_field( $about_stat['field'], $front_page_id ) : get_post_meta( $front_page_id, $about_stat['field'], true );
+
+		if ( is_array( $stat_value ) ) {
+			continue;
+		}
+
+		$stat_value = trim( (string) $stat_value );
+
+		if ( '' !== $stat_value ) {
+			$about_stats[ $index ]['value'] = $stat_value;
+		}
+	}
+}
+
 $book_query       = new WP_Query(
 	array(
 		'post_type'           => 'book',
@@ -179,34 +232,18 @@ $book_query       = new WP_Query(
 			<div class="gold-rule reveal reveal-delay-1"></div>
 			<h2 class="section-title reveal reveal-delay-1">Scholar, Author,<br><em>and Man of Faith</em></h2>
 			<blockquote class="about-quote reveal reveal-delay-2">
-				"Dr. Basta represents a rare synthesis of scholarly rigor, practical expertise,
-				and spiritual depth demonstrating that excellence in technical mastery and
-				spiritual formation is not only compatible, but mutually enriching."
+				<?php echo wp_kses_post( wpautop( $about_quote ) ); ?>
 			</blockquote>
-			<p class="section-subtitle reveal reveal-delay-3 about-copy">
-				Dr. Alfred Basta is a distinguished Professor of Cybersecurity, Computer Science,
-				and Mathematics with a Ph.D. in Cryptography. With nearly three decades of academic
-				leadership at Purdue Global, Georgia State University, and UC San Diego, he has
-				established himself as a towering figure in cybersecurity education and a
-				deeply pastoral voice in Christian ministry.
-			</p>
+			<div class="section-subtitle reveal reveal-delay-3 about-copy">
+				<?php echo wp_kses_post( wpautop( $about_summary ) ); ?>
+			</div>
 			<div class="about-stats reveal reveal-delay-4">
-				<div class="stat-item">
-					<div class="stat-num">40+</div>
-					<div class="stat-label">Books Published</div>
-				</div>
-				<div class="stat-item">
-					<div class="stat-num">60+</div>
-					<div class="stat-label">Certifications</div>
-				</div>
-				<div class="stat-item">
-					<div class="stat-num">28+</div>
-					<div class="stat-label">Years Teaching</div>
-				</div>
-				<div class="stat-item">
-					<div class="stat-num">3</div>
-					<div class="stat-label">Patents &amp; Copyrights</div>
-				</div>
+				<?php foreach ( $about_stats as $about_stat ) : ?>
+					<div class="stat-item">
+						<div class="stat-num"><?php echo esc_html( $about_stat['value'] ); ?></div>
+						<div class="stat-label"><?php echo esc_html( $about_stat['label'] ); ?></div>
+					</div>
+				<?php endforeach; ?>
 			</div>
 			<div class="about-cta reveal reveal-delay-5">
 				<a href="<?php echo esc_url( home_url( '/about-alfred/' ) ); ?>" class="btn-outline">Read Full Story</a>
