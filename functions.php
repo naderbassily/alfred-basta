@@ -858,6 +858,76 @@ function alfred_cleanup_duplicate_books() {
 add_action( 'init', 'alfred_cleanup_duplicate_books', 130 );
 
 /**
+ * Check whether a book is marked as featured on the homepage.
+ *
+ * @param int $post_id Post ID.
+ * @return bool
+ */
+function alfred_is_book_featured_on_homepage( $post_id ) {
+	$value = get_post_meta( $post_id, 'feature_on_homepage', true );
+
+	if ( is_array( $value ) ) {
+		$value = array_map( 'strtolower', array_map( 'trim', array_map( 'strval', $value ) ) );
+
+		return (bool) array_intersect( $value, array( '1', 'yes', 'true' ) );
+	}
+
+	$value = strtolower( trim( (string) $value ) );
+
+	return in_array( $value, array( '1', 'yes', 'true' ), true );
+}
+
+/**
+ * Add a featured status column to the book admin list table.
+ *
+ * @param array $columns Admin columns.
+ * @return array
+ */
+function alfred_add_book_featured_admin_column( $columns ) {
+	$updated_columns = array();
+
+	foreach ( $columns as $column_key => $column_label ) {
+		$updated_columns[ $column_key ] = $column_label;
+
+		if ( 'title' === $column_key ) {
+			$updated_columns['alfred_featured_on_homepage'] = esc_html__( 'Featured', 'alfred' );
+		}
+	}
+
+	return $updated_columns;
+}
+add_filter( 'manage_book_posts_columns', 'alfred_add_book_featured_admin_column' );
+
+/**
+ * Render the featured status column in the book admin list table.
+ *
+ * @param string $column_name Column name.
+ * @param int    $post_id     Post ID.
+ * @return void
+ */
+function alfred_render_book_featured_admin_column( $column_name, $post_id ) {
+	if ( 'alfred_featured_on_homepage' !== $column_name ) {
+		return;
+	}
+
+	if ( alfred_is_book_featured_on_homepage( $post_id ) ) {
+		printf(
+			'<span aria-label="%1$s" title="%1$s">%2$s</span>',
+			esc_attr__( 'Featured on homepage', 'alfred' ),
+			esc_html__( 'Yes', 'alfred' )
+		);
+		return;
+	}
+
+	printf(
+		'<span aria-label="%1$s" title="%1$s">%2$s</span>',
+		esc_attr__( 'Not featured on homepage', 'alfred' ),
+		esc_html__( 'No', 'alfred' )
+	);
+}
+add_action( 'manage_book_posts_custom_column', 'alfred_render_book_featured_admin_column', 10, 2 );
+
+/**
  * Implement the Custom Header feature.
  */
 require get_template_directory() . '/inc/custom-header.php';
