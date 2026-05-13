@@ -146,7 +146,7 @@ body.home a {
 	background: rgba(255, 255, 255, 0.12);
 }
 
-.nav-search__input {
+.nav-search .nav-search__input {
 	-webkit-appearance: none;
 	appearance: none;
 	width: 210px;
@@ -163,19 +163,19 @@ body.home a {
 	line-height: 1;
 }
 
-.nav-search__input::-webkit-search-decoration,
-.nav-search__input::-webkit-search-cancel-button,
-.nav-search__input::-webkit-search-results-button,
-.nav-search__input::-webkit-search-results-decoration {
+.nav-search .nav-search__input::-webkit-search-decoration,
+.nav-search .nav-search__input::-webkit-search-cancel-button,
+.nav-search .nav-search__input::-webkit-search-results-button,
+.nav-search .nav-search__input::-webkit-search-results-decoration {
 	display: none;
 }
 
-.nav-search__input::placeholder {
+.nav-search .nav-search__input::placeholder {
 	color: rgba(255, 255, 255, 0.62);
 }
 
-.nav-search__input:focus,
-.nav-search__input:focus-visible {
+.nav-search .nav-search__input:focus,
+.nav-search .nav-search__input:focus-visible {
 	border: 0 !important;
 	outline: 0 !important;
 	box-shadow: none !important;
@@ -1346,9 +1346,9 @@ body.home a {
 		margin-right: 16px;
 	}
 
-	.nav-search__input {
+	.nav-search .nav-search__input {
 		width: 150px;
-		padding: 10px 14px;
+		padding: 0 14px 0 24px;
 	}
 
 	.nav-search__submit {
