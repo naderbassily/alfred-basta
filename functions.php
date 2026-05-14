@@ -937,6 +937,66 @@ function alfred_render_book_featured_admin_column( $column_name, $post_id ) {
 add_action( 'manage_book_posts_custom_column', 'alfred_render_book_featured_admin_column', 10, 2 );
 
 /**
+ * Handle the contact page form submission.
+ *
+ * @return void
+ */
+function alfred_handle_contact_form_submission() {
+	$redirect_url = wp_get_referer() ? wp_get_referer() : home_url( '/contact/' );
+	$redirect_url = remove_query_arg( array( 'contact_status' ), $redirect_url );
+
+	if ( ! isset( $_POST['alfred_contact_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['alfred_contact_nonce'] ) ), 'alfred_contact_form' ) ) {
+		wp_safe_redirect( add_query_arg( 'contact_status', 'error', $redirect_url ) );
+		exit;
+	}
+
+	$honeypot = isset( $_POST['contact_website'] ) ? trim( (string) wp_unslash( $_POST['contact_website'] ) ) : '';
+
+	if ( '' !== $honeypot ) {
+		wp_safe_redirect( add_query_arg( 'contact_status', 'sent', $redirect_url ) );
+		exit;
+	}
+
+	$name    = isset( $_POST['contact_name'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_name'] ) ) : '';
+	$email   = isset( $_POST['contact_email'] ) ? sanitize_email( wp_unslash( $_POST['contact_email'] ) ) : '';
+	$subject = isset( $_POST['contact_subject'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_subject'] ) ) : '';
+	$message = isset( $_POST['contact_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['contact_message'] ) ) : '';
+
+	if ( ! $name || ! is_email( $email ) || ! $subject || ! $message ) {
+		wp_safe_redirect( add_query_arg( 'contact_status', 'error', $redirect_url ) );
+		exit;
+	}
+
+	$recipient = get_option( 'admin_email' );
+	$body      = sprintf(
+		"Name: %1\$s\nEmail: %2\$s\nSubject: %3\$s\n\nMessage:\n%4\$s",
+		$name,
+		$email,
+		$subject,
+		$message
+	);
+	$headers   = array(
+		'Reply-To: ' . $name . ' <' . $email . '>',
+	);
+
+	$sent = wp_mail(
+		$recipient,
+		sprintf(
+			/* translators: %s: Contact form subject. */
+			__( 'Alfred Basta contact form: %s', 'alfred' ),
+			$subject
+		),
+		$body,
+		$headers
+	);
+
+	wp_safe_redirect( add_query_arg( 'contact_status', $sent ? 'sent' : 'error', $redirect_url ) );
+	exit;
+}
+add_action( 'admin_post_alfred_contact_form', 'alfred_handle_contact_form_submission' );
+add_action( 'admin_post_nopriv_alfred_contact_form', 'alfred_handle_contact_form_submission' );
+
+/**
  * Implement the Custom Header feature.
  */
 require get_template_directory() . '/inc/custom-header.php';

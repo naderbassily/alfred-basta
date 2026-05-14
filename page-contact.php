@@ -109,6 +109,49 @@ while ( have_posts() ) :
 				</div>
 
 				<div class="contact-page-content__body reveal reveal-delay-1">
+					<?php if ( isset( $_GET['contact_status'] ) && 'sent' === sanitize_key( wp_unslash( $_GET['contact_status'] ) ) ) : ?>
+						<div class="contact-form-notice contact-form-notice--success" role="status">
+							<?php esc_html_e( 'Thank you. Your message has been sent.', 'alfred' ); ?>
+						</div>
+					<?php elseif ( isset( $_GET['contact_status'] ) && 'error' === sanitize_key( wp_unslash( $_GET['contact_status'] ) ) ) : ?>
+						<div class="contact-form-notice contact-form-notice--error" role="alert">
+							<?php esc_html_e( 'Something went wrong. Please check the form and try again.', 'alfred' ); ?>
+						</div>
+					<?php endif; ?>
+
+					<form class="contact-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+						<input type="hidden" name="action" value="alfred_contact_form">
+						<?php wp_nonce_field( 'alfred_contact_form', 'alfred_contact_nonce' ); ?>
+
+						<p class="contact-form__hidden">
+							<label for="contact-website"><?php esc_html_e( 'Website', 'alfred' ); ?></label>
+							<input id="contact-website" type="text" name="contact_website" tabindex="-1" autocomplete="off">
+						</p>
+
+						<div class="contact-form__row">
+							<p class="contact-form__field">
+								<label for="contact-name"><?php esc_html_e( 'Name', 'alfred' ); ?></label>
+								<input id="contact-name" type="text" name="contact_name" autocomplete="name" required>
+							</p>
+							<p class="contact-form__field">
+								<label for="contact-email"><?php esc_html_e( 'Email', 'alfred' ); ?></label>
+								<input id="contact-email" type="email" name="contact_email" autocomplete="email" required>
+							</p>
+						</div>
+
+						<p class="contact-form__field">
+							<label for="contact-subject"><?php esc_html_e( 'Subject', 'alfred' ); ?></label>
+							<input id="contact-subject" type="text" name="contact_subject" required>
+						</p>
+
+						<p class="contact-form__field">
+							<label for="contact-message"><?php esc_html_e( 'Message', 'alfred' ); ?></label>
+							<textarea id="contact-message" name="contact_message" rows="7" required></textarea>
+						</p>
+
+						<button type="submit" class="btn-primary contact-form__submit"><?php esc_html_e( 'Send Message', 'alfred' ); ?></button>
+					</form>
+
 					<?php if ( '' !== trim( get_the_content() ) ) : ?>
 						<?php the_content(); ?>
 					<?php else : ?>
