@@ -83,6 +83,14 @@ $book_query       = new WP_Query(
 		),
 	)
 );
+$blog_query       = new WP_Query(
+	array(
+		'post_type'           => 'post',
+		'posts_per_page'      => 3,
+		'post_status'         => 'publish',
+		'ignore_sticky_posts' => true,
+	)
+);
 ?>
 
 <main id="primary" class="site-main front-page-landing">
@@ -355,61 +363,57 @@ $book_query       = new WP_Query(
 			</p>
 
 			<div class="blog-grid">
-				<div class="blog-card reveal reveal-delay-1">
-					<div class="blog-card-image">
-						<div class="blog-img-placeholder"><span>Blog Post Cover</span></div>
-					</div>
-					<div class="blog-card-body">
-						<div class="blog-meta">
-							<span class="blog-tag">Faith</span>
-							<span class="blog-date">Coming Soon</span>
+				<?php if ( $blog_query->have_posts() ) : ?>
+					<?php
+					$blog_delay_classes = array(
+						'reveal-delay-1',
+						'reveal-delay-2',
+						'reveal-delay-3',
+					);
+					?>
+					<?php while ( $blog_query->have_posts() ) : ?>
+						<?php
+						$blog_query->the_post();
+						$delay_class  = $blog_delay_classes[ $blog_query->current_post ] ?? 'reveal-delay-1';
+						$categories   = get_the_category();
+						$blog_label   = ! empty( $categories ) ? $categories[0]->name : __( 'Article', 'alfred' );
+						$blog_excerpt = trim( get_post_field( 'post_excerpt', get_the_ID() ) );
+						?>
+						<article class="blog-card reveal <?php echo esc_attr( $delay_class ); ?>">
+							<a class="blog-card-image" href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
+								<?php if ( has_post_thumbnail() ) : ?>
+									<?php the_post_thumbnail( 'large' ); ?>
+								<?php else : ?>
+									<div class="blog-img-placeholder"><span><?php esc_html_e( 'Blog Post Cover', 'alfred' ); ?></span></div>
+								<?php endif; ?>
+							</a>
+							<div class="blog-card-body">
+								<div class="blog-meta">
+									<span class="blog-tag"><?php echo esc_html( $blog_label ); ?></span>
+								</div>
+								<h3 class="blog-card-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+								<?php if ( $blog_excerpt ) : ?>
+									<p class="blog-card-excerpt"><?php echo esc_html( $blog_excerpt ); ?></p>
+								<?php endif; ?>
+								<a href="<?php the_permalink(); ?>" class="blog-read-more"><?php esc_html_e( 'Read Article', 'alfred' ); ?></a>
+							</div>
+						</article>
+					<?php endwhile; ?>
+					<?php wp_reset_postdata(); ?>
+				<?php else : ?>
+					<div class="blog-card reveal reveal-delay-1">
+						<div class="blog-card-image">
+							<div class="blog-img-placeholder"><span><?php esc_html_e( 'Blog Post Cover', 'alfred' ); ?></span></div>
 						</div>
-						<h3 class="blog-card-title">Navigating Grief Without Losing Faith</h3>
-						<p class="blog-card-excerpt">
-							Loss strips us of every comfortable certainty. But it also creates the conditions
-							where the sovereignty of God becomes not a doctrine we recite, but a foundation
-							we actually stand on.
-						</p>
-						<a href="<?php echo esc_url( $posts_page_url ); ?>" class="blog-read-more">Read Article</a>
-					</div>
-				</div>
-
-				<div class="blog-card reveal reveal-delay-2">
-					<div class="blog-card-image">
-						<div class="blog-img-placeholder"><span>Blog Post Cover</span></div>
-					</div>
-					<div class="blog-card-body">
-						<div class="blog-meta">
-							<span class="blog-tag">Cybersecurity</span>
-							<span class="blog-date">Coming Soon</span>
+						<div class="blog-card-body">
+							<div class="blog-meta">
+								<span class="blog-tag"><?php esc_html_e( 'Author Blog', 'alfred' ); ?></span>
+							</div>
+							<h3 class="blog-card-title"><?php esc_html_e( 'New articles will appear here', 'alfred' ); ?></h3>
+							<p class="blog-card-excerpt"><?php esc_html_e( 'Publish WordPress posts to populate this section with Alfred Basta author blog entries.', 'alfred' ); ?></p>
 						</div>
-						<h3 class="blog-card-title">Why Every Security Breach Starts With a Human Decision</h3>
-						<p class="blog-card-excerpt">
-							After 28 years in the field, one truth keeps reasserting itself: the most
-							sophisticated technical controls fail when the human element is ignored.
-							Security culture is not optional, it is foundational.
-						</p>
-						<a href="<?php echo esc_url( $posts_page_url ); ?>" class="blog-read-more">Read Article</a>
 					</div>
-				</div>
-
-				<div class="blog-card reveal reveal-delay-3">
-					<div class="blog-card-image">
-						<div class="blog-img-placeholder"><span>Blog Post Cover</span></div>
-					</div>
-					<div class="blog-card-body">
-						<div class="blog-meta">
-							<span class="blog-tag">Education</span>
-							<span class="blog-date">Coming Soon</span>
-						</div>
-						<h3 class="blog-card-title">Mathematics Is the Language Cybersecurity Has Always Spoken</h3>
-						<p class="blog-card-excerpt">
-							Students ask why they need to understand cryptographic math when the tools
-							handle everything. The answer is simple: tools fail. Understanding does not.
-						</p>
-						<a href="<?php echo esc_url( $posts_page_url ); ?>" class="blog-read-more">Read Article</a>
-					</div>
-				</div>
+				<?php endif; ?>
 			</div>
 
 			<div class="books-cta reveal blog-cta">

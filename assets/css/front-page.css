@@ -921,10 +921,24 @@ body.home a {
 }
 
 .blog-card-image {
+	display: block;
 	aspect-ratio: 16 / 9;
 	background: var(--black3);
+	text-decoration: none;
 	overflow: hidden;
 	position: relative;
+}
+
+.blog-card-image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.35s ease;
+}
+
+.blog-card:hover .blog-card-image img {
+	transform: scale(1.04);
 }
 
 .blog-img-placeholder {
@@ -979,6 +993,18 @@ body.home a {
 	line-height: 1.45;
 	margin-bottom: 12px;
 	transition: color 0.3s ease;
+}
+
+.blog-card-title a,
+.blog-card-title a:visited {
+	color: inherit;
+	text-decoration: none;
+}
+
+.blog-card-title a:hover,
+.blog-card-title a:focus {
+	color: inherit;
+	text-decoration: none;
 }
 
 .blog-card:hover .blog-card-title {
