@@ -1132,6 +1132,10 @@ body.alfred-about-page {
 	align-items: center;
 }
 
+.blog-single-hero__container--text-only {
+	grid-template-columns: minmax(0, 920px);
+}
+
 .blog-single-hero__image-shell {
 	position: relative;
 	border: 1px solid rgba(201, 162, 84, 0.28);
@@ -1216,6 +1220,10 @@ body.alfred-about-page {
 	text-transform: uppercase;
 }
 
+.section-white .blog-single-sidebar__label {
+	color: var(--gold-dark);
+}
+
 .blog-single-sidebar__card h2 {
 	margin: 0 0 12px;
 	font-family: var(--serif);
@@ -1227,6 +1235,50 @@ body.alfred-about-page {
 	margin: 0;
 	color: var(--gray2);
 	line-height: 1.7;
+}
+
+.blog-sidebar-article-list {
+	display: grid;
+	gap: 14px;
+}
+
+.blog-sidebar-article,
+.blog-sidebar-article:visited {
+	display: grid;
+	gap: 8px;
+	padding: 18px 0;
+	border-bottom: 1px solid rgba(201, 162, 84, 0.2);
+	color: var(--black2);
+	text-decoration: none;
+}
+
+.blog-sidebar-article:first-child {
+	padding-top: 0;
+}
+
+.blog-sidebar-article:last-child {
+	padding-bottom: 0;
+	border-bottom: 0;
+}
+
+.blog-sidebar-article span {
+	color: var(--gold-dark);
+	font-size: 0.68rem;
+	font-weight: 800;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.blog-sidebar-article strong {
+	font-family: var(--serif);
+	font-size: 1.2rem;
+	font-weight: 600;
+	line-height: 1.18;
+}
+
+.blog-sidebar-article:hover strong,
+.blog-sidebar-article:focus strong {
+	color: var(--gold-dark);
 }
 
 .blog-single-topic-list {
@@ -1258,6 +1310,10 @@ body.alfred-about-page {
 
 .blog-related-section {
 	padding-top: 26px;
+}
+
+.blog-related-books-grid {
+	margin-top: 52px;
 }
 
 .blog-post-navigation {
