@@ -49,24 +49,22 @@ if ( ! $hero_intro ) {
 						$label        = ! empty( $categories ) ? $categories[0]->name : __( 'Article', 'alfred' );
 						$card_excerpt = trim( get_post_field( 'post_excerpt', get_the_ID() ) );
 						?>
-						<article id="post-<?php the_ID(); ?>" <?php post_class( 'blog-archive-card reveal reveal-delay-2' ); ?>>
-							<a class="blog-archive-card__image" href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
+						<article id="post-<?php the_ID(); ?>" <?php post_class( 'blog-card blog-archive-card reveal reveal-delay-2' ); ?>>
+							<a class="blog-card-image" href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
 								<?php if ( has_post_thumbnail() ) : ?>
 									<?php the_post_thumbnail( 'large' ); ?>
 								<?php else : ?>
-									<div class="blog-archive-card__placeholder">
-										<span><?php echo esc_html( $label ); ?></span>
-										<strong><?php the_title(); ?></strong>
-									</div>
+									<div class="blog-img-placeholder"><span><?php esc_html_e( 'Blog Post Cover', 'alfred' ); ?></span></div>
 								<?php endif; ?>
 							</a>
 
-							<div class="blog-archive-card__body">
-								<div class="blog-archive-card__meta">
-									<span><?php echo esc_html( $label ); ?></span>
+							<div class="blog-card-body">
+								<div class="blog-meta">
+									<span class="blog-tag"><?php echo esc_html( $label ); ?></span>
 								</div>
+								<h3 class="blog-card-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
 								<?php if ( $card_excerpt ) : ?>
-									<div class="blog-archive-card__excerpt"><?php echo esc_html( $card_excerpt ); ?></div>
+									<p class="blog-card-excerpt"><?php echo esc_html( $card_excerpt ); ?></p>
 								<?php endif; ?>
 								<a class="blog-read-more" href="<?php the_permalink(); ?>"><?php esc_html_e( 'Read Article', 'alfred' ); ?></a>
 							</div>

@@ -956,6 +956,35 @@ body.alfred-about-page {
 	box-shadow: 0 30px 80px rgba(17, 17, 17, 0.12);
 }
 
+.blog-archive-card .blog-card-image {
+	display: block;
+	text-decoration: none;
+}
+
+.blog-archive-card .blog-card-image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.35s ease;
+}
+
+.blog-archive-card:hover .blog-card-image img {
+	transform: scale(1.04);
+}
+
+.blog-archive-card .blog-card-title a,
+.blog-archive-card .blog-card-title a:visited {
+	color: inherit;
+	text-decoration: none;
+}
+
+.blog-archive-card .blog-card-title a:hover,
+.blog-archive-card .blog-card-title a:focus {
+	color: var(--gold-dark);
+	text-decoration: none;
+}
+
 .blog-archive-card__image {
 	display: block;
 	aspect-ratio: 16 / 10;
