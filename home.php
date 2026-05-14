@@ -45,8 +45,9 @@ if ( ! $hero_intro ) {
 					<?php
 					while ( have_posts() ) :
 						the_post();
-						$categories = get_the_category();
-						$label      = ! empty( $categories ) ? $categories[0]->name : __( 'Article', 'alfred' );
+						$categories   = get_the_category();
+						$label        = ! empty( $categories ) ? $categories[0]->name : __( 'Article', 'alfred' );
+						$card_excerpt = trim( get_post_field( 'post_excerpt', get_the_ID() ) );
 						?>
 						<article id="post-<?php the_ID(); ?>" <?php post_class( 'blog-archive-card reveal reveal-delay-2' ); ?>>
 							<a class="blog-archive-card__image" href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
@@ -64,7 +65,9 @@ if ( ! $hero_intro ) {
 								<div class="blog-archive-card__meta">
 									<span><?php echo esc_html( $label ); ?></span>
 								</div>
-								<div class="blog-archive-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></div>
+								<?php if ( $card_excerpt ) : ?>
+									<div class="blog-archive-card__excerpt"><?php echo esc_html( $card_excerpt ); ?></div>
+								<?php endif; ?>
 								<a class="blog-read-more" href="<?php the_permalink(); ?>"><?php esc_html_e( 'Read Article', 'alfred' ); ?></a>
 							</div>
 						</article>

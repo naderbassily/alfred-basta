@@ -10,19 +10,39 @@ get_header();
 while ( have_posts() ) :
 	the_post();
 
-	$categories     = get_the_category();
-	$related_args   = array(
+	$categories             = get_the_category();
+	$selected_related_books = function_exists( 'get_field' ) ? get_field( 'select_related_books', get_the_ID() ) : get_post_meta( get_the_ID(), 'select_related_books', true );
+	$related_book_ids       = array();
+	$related_args           = array(
 		'post_type'           => 'post',
 		'post_status'         => 'publish',
 		'posts_per_page'      => 3,
 		'post__not_in'        => array( get_the_ID() ),
 		'ignore_sticky_posts' => true,
 	);
-	$related_books  = new WP_Query(
+
+	if ( $selected_related_books ) {
+		$selected_related_books = is_array( $selected_related_books ) ? $selected_related_books : array( $selected_related_books );
+
+		foreach ( $selected_related_books as $selected_related_book ) {
+			if ( $selected_related_book instanceof WP_Post ) {
+				$related_book_ids[] = (int) $selected_related_book->ID;
+			} elseif ( is_array( $selected_related_book ) && ! empty( $selected_related_book['ID'] ) ) {
+				$related_book_ids[] = (int) $selected_related_book['ID'];
+			} elseif ( is_numeric( $selected_related_book ) ) {
+				$related_book_ids[] = (int) $selected_related_book;
+			}
+		}
+	}
+
+	$related_book_ids = array_values( array_unique( array_filter( $related_book_ids ) ) );
+	$related_books    = new WP_Query(
 		array(
 			'post_type'           => 'book',
 			'post_status'         => 'publish',
-			'posts_per_page'      => 3,
+			'posts_per_page'      => $related_book_ids ? count( $related_book_ids ) : 1,
+			'post__in'            => $related_book_ids ? $related_book_ids : array( 0 ),
+			'orderby'             => 'post__in',
 			'ignore_sticky_posts' => true,
 		)
 	);
