@@ -39,8 +39,8 @@ while ( have_posts() ) :
 							<?php the_post_thumbnail( 'large', array( 'class' => 'blog-single-hero__image' ) ); ?>
 						<?php else : ?>
 							<div class="blog-single-hero__placeholder">
-								<span><?php echo esc_html( get_the_date( 'M j' ) ); ?></span>
-								<strong><?php echo esc_html( get_the_date( 'Y' ) ); ?></strong>
+								<span><?php echo esc_html( $primary_term ); ?></span>
+								<strong><?php the_title(); ?></strong>
 							</div>
 						<?php endif; ?>
 					</div>
@@ -132,8 +132,8 @@ while ( have_posts() ) :
 										<?php the_post_thumbnail( 'large' ); ?>
 									<?php else : ?>
 										<div class="blog-archive-card__placeholder">
-											<span><?php echo esc_html( get_the_date( 'M j' ) ); ?></span>
-											<strong><?php echo esc_html( get_the_date( 'Y' ) ); ?></strong>
+											<span><?php echo esc_html( $related_label ); ?></span>
+											<strong><?php the_title(); ?></strong>
 										</div>
 									<?php endif; ?>
 								</a>
@@ -141,7 +141,6 @@ while ( have_posts() ) :
 								<div class="blog-archive-card__body">
 									<div class="blog-archive-card__meta">
 										<span><?php echo esc_html( $related_label ); ?></span>
-										<span><?php echo esc_html( get_the_date() ); ?></span>
 									</div>
 									<h3 class="blog-archive-card__title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
 									<div class="blog-archive-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></div>

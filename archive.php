@@ -61,8 +61,8 @@ if ( ! $archive_description ) {
 									<?php the_post_thumbnail( 'large' ); ?>
 								<?php else : ?>
 									<div class="blog-archive-card__placeholder">
-										<span><?php echo esc_html( get_the_date( 'M j' ) ); ?></span>
-										<strong><?php echo esc_html( get_the_date( 'Y' ) ); ?></strong>
+										<span><?php echo esc_html( $label ); ?></span>
+										<strong><?php the_title(); ?></strong>
 									</div>
 								<?php endif; ?>
 							</a>
@@ -70,7 +70,6 @@ if ( ! $archive_description ) {
 							<div class="blog-archive-card__body">
 								<div class="blog-archive-card__meta">
 									<span><?php echo esc_html( $label ); ?></span>
-									<span><?php echo esc_html( get_the_date() ); ?></span>
 								</div>
 								<h3 class="blog-archive-card__title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
 								<div class="blog-archive-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></div>
