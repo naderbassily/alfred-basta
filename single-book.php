@@ -159,12 +159,74 @@ while ( have_posts() ) :
 		}
 	}
 
+	$current_book_id      = get_the_ID();
+	$current_series_key   = alfred_get_book_series_key( get_the_title() );
+	$current_title_key    = alfred_normalize_book_title( get_the_title() );
+	$related_book_ids     = array();
+	$all_book_ids         = get_posts(
+		array(
+			'post_type'              => 'book',
+			'post_status'            => 'publish',
+			'posts_per_page'         => -1,
+			'fields'                 => 'ids',
+			'orderby'                => 'title',
+			'order'                  => 'ASC',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+		)
+	);
+
+	if ( $current_series_key && $current_series_key !== $current_title_key ) {
+		foreach ( $all_book_ids as $candidate_book_id ) {
+			if ( (int) $candidate_book_id === $current_book_id ) {
+				continue;
+			}
+
+			if ( $current_series_key === alfred_get_book_series_key( get_the_title( $candidate_book_id ) ) ) {
+				$related_book_ids[] = (int) $candidate_book_id;
+			}
+
+			if ( 3 <= count( $related_book_ids ) ) {
+				break;
+			}
+		}
+	}
+
+	if ( 3 > count( $related_book_ids ) ) {
+		$current_genre_terms = get_the_terms( $current_book_id, 'book-genre' );
+
+		if ( ! empty( $current_genre_terms ) && ! is_wp_error( $current_genre_terms ) ) {
+			$same_genre_books = get_posts(
+				array(
+					'post_type'              => 'book',
+					'post_status'            => 'publish',
+					'posts_per_page'         => 3 - count( $related_book_ids ),
+					'fields'                 => 'ids',
+					'post__not_in'           => array_merge( array( $current_book_id ), $related_book_ids ),
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'tax_query'              => array(
+						array(
+							'taxonomy' => 'book-genre',
+							'field'    => 'term_id',
+							'terms'    => wp_list_pluck( $current_genre_terms, 'term_id' ),
+						),
+					),
+				)
+			);
+
+			$related_book_ids = array_merge( $related_book_ids, array_map( 'intval', $same_genre_books ) );
+		}
+	}
+
 	$related_books = new WP_Query(
 		array(
 			'post_type'      => 'book',
 			'post_status'    => 'publish',
-			'posts_per_page' => 3,
-			'post__not_in'   => array( get_the_ID() ),
+			'posts_per_page' => $related_book_ids ? count( $related_book_ids ) : 1,
+			'post__in'       => $related_book_ids ? $related_book_ids : array( 0 ),
+			'orderby'        => 'post__in',
 		)
 	);
 	?>

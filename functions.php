@@ -637,6 +637,20 @@ function alfred_normalize_book_title( $title ) {
 }
 
 /**
+ * Normalize a book title into a series/name key for related-volume matching.
+ *
+ * @param string $title Book title.
+ * @return string
+ */
+function alfred_get_book_series_key( $title ) {
+	$title = alfred_normalize_book_title( $title );
+	$title = preg_replace( '/(?:\\s*[-–—:;,()]\\s*)?\\b(?:volume|vol\\.?|book|part)\\s+[0-9ivxlcdm]+\\b.*$/i', '', $title );
+	$title = preg_replace( '/\\s+/', ' ', (string) $title );
+
+	return trim( $title, " \t\n\r\0\x0B-–—:;,()" );
+}
+
+/**
  * Update a book field using ACF when available, falling back to post meta.
  *
  * @param int    $post_id Post ID.
