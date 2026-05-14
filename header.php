@@ -25,7 +25,7 @@
 <div id="page" class="site">
 	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'alfred' ); ?></a>
 
-	<?php if ( ! alfred_is_landing_page() && ! alfred_is_book_layout() && ! alfred_is_about_page() && ! alfred_is_contact_page() && ! alfred_is_blog_layout() ) : ?>
+	<?php if ( ! alfred_is_landing_page() && ! alfred_is_book_layout() && ! alfred_is_about_page() && ! alfred_is_contact_page() && ! alfred_is_blog_layout() && ! alfred_is_utility_layout() ) : ?>
 	<header id="masthead" class="site-header">
 		<div class="site-branding">
 			<?php
