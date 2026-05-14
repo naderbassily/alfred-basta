@@ -64,7 +64,6 @@ if ( ! $hero_intro ) {
 								<div class="blog-archive-card__meta">
 									<span><?php echo esc_html( $label ); ?></span>
 								</div>
-								<h3 class="blog-archive-card__title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
 								<div class="blog-archive-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></div>
 								<a class="blog-read-more" href="<?php the_permalink(); ?>"><?php esc_html_e( 'Read Article', 'alfred' ); ?></a>
 							</div>

@@ -1009,7 +1009,7 @@ body.alfred-about-page {
 	font-size: clamp(1.55rem, 3vw, 2.45rem);
 	font-weight: 600;
 	line-height: 1.08;
-	color: var(--black);
+	color: var(--offwhite);
 }
 
 .blog-archive-card__body {
