@@ -10,7 +10,7 @@
  */
 
 ?>
-<?php if ( ! alfred_is_landing_page() && ! alfred_is_book_layout() && ! alfred_is_about_page() && ! alfred_is_contact_page() ) : ?>
+<?php if ( ! alfred_is_landing_page() && ! alfred_is_book_layout() && ! alfred_is_about_page() && ! alfred_is_contact_page() && ! alfred_is_blog_layout() ) : ?>
 	<footer id="colophon" class="site-footer">
 		<div class="site-info">
 			<a href="<?php echo esc_url( __( 'https://wordpress.org/', 'alfred' ) ); ?>">

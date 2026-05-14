@@ -14,8 +14,7 @@ if ( file_exists( get_theme_file_path( 'assets/images/alfred-hero.jpg' ) ) ) {
 	$hero_image_uri = get_theme_file_uri( 'assets/images/alfred-hero.jpg' );
 }
 
-$posts_page_id  = (int) get_option( 'page_for_posts' );
-$posts_page_url = $posts_page_id ? get_permalink( $posts_page_id ) : '#blog';
+$posts_page_url = alfred_get_blog_archive_url();
 
 if ( have_posts() ) {
 	while ( have_posts() ) {

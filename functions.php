@@ -172,6 +172,15 @@ function alfred_is_contact_page() {
 }
 
 /**
+ * Check whether the current request uses the custom blog layout.
+ *
+ * @return bool
+ */
+function alfred_is_blog_layout() {
+	return is_home() || is_singular( 'post' ) || is_category() || is_tag() || is_author() || is_date() || (bool) get_query_var( 'alfred_author_blog' );
+}
+
+/**
  * Shared navigation links used across the landing page and book layout.
  *
  * @return array<int, array{anchor:string,label:string}>
@@ -231,12 +240,28 @@ function alfred_get_book_archive_url() {
 }
 
 /**
+ * Get the public archive URL for author blog posts.
+ *
+ * @return string
+ */
+function alfred_get_blog_archive_url() {
+	$posts_page_id = (int) get_option( 'page_for_posts' );
+
+	if ( $posts_page_id ) {
+		return get_permalink( $posts_page_id );
+	}
+
+	return home_url( '/author-blog/' );
+}
+
+/**
  * Register a fallback rewrite for the book archive.
  *
  * Supports themes where the book CPT exists but `has_archive` is disabled.
  */
 function alfred_register_book_archive_rewrite() {
 	add_rewrite_rule( '^book/?$', 'index.php?alfred_book_archive=1', 'top' );
+	add_rewrite_rule( '^author-blog/?$', 'index.php?alfred_author_blog=1', 'top' );
 }
 add_action( 'init', 'alfred_register_book_archive_rewrite' );
 
@@ -248,6 +273,7 @@ add_action( 'init', 'alfred_register_book_archive_rewrite' );
  */
 function alfred_register_query_vars( $vars ) {
 	$vars[] = 'alfred_book_archive';
+	$vars[] = 'alfred_author_blog';
 
 	return $vars;
 }
@@ -277,6 +303,28 @@ function alfred_prepare_book_archive_query( $query ) {
 add_action( 'pre_get_posts', 'alfred_prepare_book_archive_query' );
 
 /**
+ * Force the custom `/author-blog/` route to behave like the posts archive.
+ *
+ * @param WP_Query $query Main query instance.
+ */
+function alfred_prepare_author_blog_query( $query ) {
+	if ( is_admin() || ! $query->is_main_query() || ! $query->get( 'alfred_author_blog' ) ) {
+		return;
+	}
+
+	$query->set( 'post_type', 'post' );
+	$query->set( 'post_status', 'publish' );
+	$query->set( 'name', '' );
+	$query->set( 'pagename', '' );
+	$query->is_home     = true;
+	$query->is_page     = false;
+	$query->is_singular = false;
+	$query->is_single   = false;
+	$query->is_archive  = false;
+}
+add_action( 'pre_get_posts', 'alfred_prepare_author_blog_query' );
+
+/**
  * Load the dedicated archive template for the custom `/book/` route.
  *
  * @param string $template Resolved template path.
@@ -291,6 +339,14 @@ function alfred_book_archive_template( $template ) {
 		}
 	}
 
+	if ( get_query_var( 'alfred_author_blog' ) ) {
+		$home_template = locate_template( 'home.php' );
+
+		if ( $home_template ) {
+			return $home_template;
+		}
+	}
+
 	return $template;
 }
 add_filter( 'template_include', 'alfred_book_archive_template' );
@@ -299,12 +355,12 @@ add_filter( 'template_include', 'alfred_book_archive_template' );
  * Flush rewrite rules once after registering the fallback book archive route.
  */
 function alfred_maybe_flush_book_archive_rewrite() {
-	if ( get_option( 'alfred_book_archive_rewrite_flushed_v2' ) ) {
+	if ( get_option( 'alfred_book_archive_rewrite_flushed_v3' ) ) {
 		return;
 	}
 
 	flush_rewrite_rules( false );
-	update_option( 'alfred_book_archive_rewrite_flushed_v2', 1 );
+	update_option( 'alfred_book_archive_rewrite_flushed_v3', 1 );
 }
 add_action( 'init', 'alfred_maybe_flush_book_archive_rewrite', 99 );
 
@@ -315,7 +371,7 @@ function alfred_scripts() {
 	wp_enqueue_style( 'alfred-style', get_stylesheet_uri(), array(), _S_VERSION );
 	wp_style_add_data( 'alfred-style', 'rtl', 'replace' );
 
-	if ( alfred_is_landing_page() || alfred_is_book_layout() || alfred_is_about_page() || alfred_is_contact_page() ) {
+	if ( alfred_is_landing_page() || alfred_is_book_layout() || alfred_is_about_page() || alfred_is_contact_page() || alfred_is_blog_layout() ) {
 		wp_enqueue_style(
 			'alfred-fonts',
 			'https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap',
@@ -340,7 +396,7 @@ function alfred_scripts() {
 			_S_VERSION,
 			true
 		);
-	} elseif ( alfred_is_book_layout() || alfred_is_about_page() || alfred_is_contact_page() ) {
+	} elseif ( alfred_is_book_layout() || alfred_is_about_page() || alfred_is_contact_page() || alfred_is_blog_layout() ) {
 		wp_enqueue_style(
 			'alfred-front-page',
 			get_template_directory_uri() . '/assets/css/front-page.css',
@@ -359,7 +415,8 @@ function alfred_scripts() {
 			'alfred-front-page',
 			get_template_directory_uri() . '/assets/js/front-page.js',
 			array(),
-			_S_VERSION
+			_S_VERSION,
+			true
 		);
 	} else {
 		wp_enqueue_script( 'alfred-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
@@ -388,9 +445,11 @@ function alfred_front_page_menu_fallback( $args = array() ) {
 	);
 
 	foreach ( $links as $link ) {
+		$url = 'Blog' === $link['label'] ? alfred_get_blog_archive_url() : alfred_get_front_page_anchor_url( $link['anchor'] );
+
 		printf(
 			'<li><a href="%1$s">%2$s</a></li>',
-			esc_url( alfred_get_front_page_anchor_url( $link['anchor'] ) ),
+			esc_url( $url ),
 			esc_html( $link['label'] )
 		);
 	}
@@ -416,6 +475,110 @@ function alfred_front_page_navigation( $menu_id = 'navLinks', $menu_class = 'nav
 			'depth'          => 1,
 		)
 	);
+}
+
+/**
+ * Keep the WordPress-managed Blog menu item pointed at the real posts archive.
+ *
+ * @param array    $items Menu items.
+ * @param stdClass $args  Menu arguments.
+ * @return array
+ */
+function alfred_normalize_blog_menu_item_url( $items, $args ) {
+	if ( empty( $args->theme_location ) || 'front-page-menu' !== $args->theme_location ) {
+		return $items;
+	}
+
+	foreach ( $items as $item ) {
+		if ( isset( $item->title ) && 'blog' === strtolower( trim( wp_strip_all_tags( $item->title ) ) ) ) {
+			$item->url = alfred_get_blog_archive_url();
+		}
+	}
+
+	return $items;
+}
+add_filter( 'wp_nav_menu_objects', 'alfred_normalize_blog_menu_item_url', 10, 2 );
+
+/**
+ * Render the custom Alfred navigation bar.
+ *
+ * @param string $aria_label Navigation aria-label.
+ * @param string $search_id  Unique search field ID.
+ * @return void
+ */
+function alfred_custom_site_navigation( $aria_label, $search_id ) {
+	?>
+	<nav class="site-nav single-book-nav-shell" id="siteNav" aria-label="<?php echo esc_attr( $aria_label ); ?>">
+		<div class="nav-logo"><a href="<?php echo esc_url( home_url( '/' ) ); ?>">Alfred Basta</a></div>
+		<?php alfred_front_page_navigation(); ?>
+		<form class="nav-search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>" role="search">
+			<label class="screen-reader-text" for="<?php echo esc_attr( $search_id ); ?>"><?php esc_html_e( 'Search the site', 'alfred' ); ?></label>
+			<input id="<?php echo esc_attr( $search_id ); ?>" class="nav-search__input" type="search" name="s" placeholder="<?php esc_attr_e( 'Search', 'alfred' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>">
+			<button type="submit" class="nav-search__submit"><?php esc_html_e( 'Search', 'alfred' ); ?></button>
+		</form>
+		<button class="nav-toggle" id="navToggle" type="button" aria-label="<?php esc_attr_e( 'Toggle menu', 'alfred' ); ?>" aria-expanded="false" aria-controls="navLinks">
+			<span></span><span></span><span></span>
+		</button>
+	</nav>
+	<?php
+}
+
+/**
+ * Render the custom Alfred footer.
+ *
+ * @return void
+ */
+function alfred_custom_site_footer() {
+	?>
+	<footer class="site-footer" id="contact">
+		<div class="footer-top">
+			<div class="footer-brand">
+				<div class="footer-brand-name">Alfred Basta</div>
+				<p class="footer-brand-desc">
+					<?php esc_html_e( 'Ph.D. Cryptography · Professor at Purdue Global & Georgia State University · Author of 40+ books published by Wiley, Cengage & Amazon · Chair, EC-Council CPENT Scheme Committee · Based in Woodstock, GA.', 'alfred' ); ?>
+				</p>
+				<div class="footer-social">
+					<a href="https://www.linkedin.com/in/alfred-basta-a94379249/" class="social-link" aria-label="<?php esc_attr_e( 'LinkedIn', 'alfred' ); ?>" target="_blank" rel="noopener">
+						<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+							<path d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3C4.17 3 3.5 3.72 3.5 4.66c0 .92.65 1.66 1.71 1.66h.02c1.1 0 1.77-.74 1.77-1.66C6.98 3.72 6.35 3 5.25 3ZM20.5 12.56c0-3.52-1.88-5.16-4.39-5.16-2.02 0-2.93 1.12-3.43 1.9V8.5H9.31c.04.53 0 11.5 0 11.5h3.37v-6.42c0-.34.02-.68.12-.92.27-.68.89-1.39 1.94-1.39 1.37 0 1.92 1.05 1.92 2.59V20H20.5v-7.44Z" fill="currentColor"/>
+						</svg>
+					</a>
+				</div>
+			</div>
+
+			<div class="footer-col">
+				<div class="footer-col-title"><?php esc_html_e( 'Navigate', 'alfred' ); ?></div>
+				<?php alfred_front_page_navigation( 'footerNavigationLinks', 'footer-links' ); ?>
+			</div>
+
+			<div class="footer-col">
+				<div class="footer-col-title"><?php esc_html_e( 'Books By Topic', 'alfred' ); ?></div>
+				<ul class="footer-links">
+					<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>"><?php esc_html_e( 'Cybersecurity & Pen Testing', 'alfred' ); ?></a></li>
+					<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>"><?php esc_html_e( 'Mathematics & Cryptography', 'alfred' ); ?></a></li>
+					<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>"><?php esc_html_e( 'Faith & Spirituality', 'alfred' ); ?></a></li>
+					<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>"><?php esc_html_e( 'Linux & Networking', 'alfred' ); ?></a></li>
+					<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>"><?php esc_html_e( 'Database Security', 'alfred' ); ?></a></li>
+				</ul>
+			</div>
+
+			<div class="footer-col">
+				<div class="footer-col-title"><?php esc_html_e( 'Get in Touch', 'alfred' ); ?></div>
+				<ul class="footer-links">
+					<li><a href="mailto:<?php echo esc_attr( antispambot( 'contact@alfredbasta.com' ) ); ?>"><?php echo esc_html( antispambot( 'contact@alfredbasta.com' ) ); ?></a></li>
+					<li><a href="https://cloudsecurityalliance.org/profiles/alfred-basta" target="_blank" rel="noopener"><?php esc_html_e( 'Cloud Security Alliance', 'alfred' ); ?></a></li>
+					<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Speaking & Consulting', 'alfred' ); ?></a></li>
+					<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Publisher Inquiries', 'alfred' ); ?></a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="footer-bottom">
+			<p class="footer-copy">© <?php echo esc_html( wp_date( 'Y' ) ); ?> <span><?php esc_html_e( 'Dr. Alfred Basta', 'alfred' ); ?></span>. <?php esc_html_e( 'All rights reserved.', 'alfred' ); ?></p>
+			<p class="footer-copy"><?php esc_html_e( 'Professor · Author · Cybersecurity Expert · Woodstock, GA', 'alfred' ); ?></p>
+		</div>
+	</footer>
+	<?php
 }
 
 /**
