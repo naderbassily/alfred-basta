@@ -68,6 +68,8 @@ while ( have_posts() ) :
 		$description = has_excerpt() ? get_the_excerpt() : get_the_content();
 	}
 
+	$has_body_content = '' !== trim( (string) get_post_field( 'post_content', get_the_ID() ) );
+
 	$buy_link = alfred_get_first_acf_value(
 		$acf_fields,
 		array(
@@ -82,13 +84,35 @@ while ( have_posts() ) :
 	);
 
 	$buy_url   = '';
-	$buy_label = 'Buy on Amazon';
+	$buy_label = 'View on Amazon';
 
 	if ( is_array( $buy_link ) ) {
-		$buy_url   = ! empty( $buy_link['url'] ) ? $buy_link['url'] : '';
-		$buy_label = ! empty( $buy_link['title'] ) ? $buy_link['title'] : $buy_label;
+		$buy_url = ! empty( $buy_link['url'] ) ? $buy_link['url'] : '';
 	} elseif ( is_string( $buy_link ) ) {
 		$buy_url = $buy_link;
+	}
+
+	$publisher_link       = null;
+	$publisher_link_url   = '';
+	$publisher_link_label = '';
+
+	foreach ( array( 'wiley_link' => 'View on Wiley', 'cengage_link' => 'View on Cengage' ) as $publisher_field => $publisher_label ) {
+		$publisher_link = alfred_get_first_acf_value( $acf_fields, array( $publisher_field ) );
+
+		if ( null === $publisher_link ) {
+			$publisher_link = get_post_meta( get_the_ID(), $publisher_field, true );
+		}
+
+		if ( null !== $publisher_link && '' !== $publisher_link && array() !== $publisher_link ) {
+			$publisher_link_label = $publisher_label;
+			break;
+		}
+	}
+
+	if ( is_array( $publisher_link ) ) {
+		$publisher_link_url = ! empty( $publisher_link['url'] ) ? $publisher_link['url'] : '';
+	} elseif ( is_string( $publisher_link ) ) {
+		$publisher_link_url = $publisher_link;
 	}
 
 	$detail_keys = array(
@@ -265,7 +289,7 @@ while ( have_posts() ) :
 						<?php if ( $book_hero_label ) : ?>
 							<div class="book-hero__eyebrow reveal"><?php echo esc_html( $book_hero_label ); ?></div>
 						<?php endif; ?>
-					<h1 class="book-hero__title reveal reveal-delay-1"><?php the_title(); ?></h1>
+					<h1 class="book-hero__title single-book-hero__title reveal reveal-delay-1"><?php the_title(); ?></h1>
 
 					<?php if ( $description ) : ?>
 						<div class="book-hero__description reveal reveal-delay-2">
@@ -277,6 +301,9 @@ while ( have_posts() ) :
 							<a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>" class="btn-outline">Browse All Books</a>
 						<?php if ( $buy_url ) : ?>
 							<a href="<?php echo esc_url( $buy_url ); ?>" class="btn-primary" target="_blank" rel="noopener"><?php echo esc_html( $buy_label ); ?></a>
+						<?php endif; ?>
+						<?php if ( $publisher_link_url && $publisher_link_label ) : ?>
+							<a href="<?php echo esc_url( $publisher_link_url ); ?>" class="btn-primary" target="_blank" rel="noopener"><?php echo esc_html( $publisher_link_label ); ?></a>
 						<?php endif; ?>
 					</div>
 
@@ -294,21 +321,23 @@ while ( have_posts() ) :
 			</div>
 		</section>
 
-		<div class="section-separator"></div>
+		<?php if ( $has_body_content ) : ?>
+			<div class="section-separator"></div>
 
-		<section class="section section-white single-book-story">
-			<div class="container single-book-story__container">
-				<div class="single-book-story__intro reveal">
-					<span class="section-label">About This Book</span>
-					<div class="gold-rule"></div>
-					<h2 class="section-title">Read the <em>Full Overview</em></h2>
-				</div>
+			<section class="section section-white single-book-story">
+				<div class="container single-book-story__container">
+					<div class="single-book-story__intro reveal">
+						<span class="section-label">About This Book</span>
+						<div class="gold-rule"></div>
+						<h2 class="section-title">Read the <em>Full Overview</em></h2>
+					</div>
 
-				<div class="single-book-story__body reveal reveal-delay-2">
-					<?php the_content(); ?>
+					<div class="single-book-story__body reveal reveal-delay-2">
+						<?php the_content(); ?>
+					</div>
 				</div>
-			</div>
-		</section>
+			</section>
+		<?php endif; ?>
 
 		<?php if ( $related_books->have_posts() ) : ?>
 			<div class="section-separator"></div>

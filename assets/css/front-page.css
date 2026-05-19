@@ -158,6 +158,8 @@ body.home a {
 	outline: 0 !important;
 	box-shadow: none !important;
 	color: var(--white);
+	-webkit-text-fill-color: var(--white);
+	caret-color: var(--white);
 	font-family: var(--sans);
 	font-size: 0.88rem;
 	line-height: 1;

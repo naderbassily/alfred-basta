@@ -18,7 +18,7 @@ $search_query = get_search_query();
 		<div class="container book-archive-hero__container">
 			<div class="book-archive-hero__content">
 				<div class="book-hero__eyebrow reveal"><?php esc_html_e( 'Search', 'alfred' ); ?></div>
-				<h1 class="book-hero__title reveal reveal-delay-1">
+				<h1 class="book-hero__title search-results-hero__title reveal reveal-delay-1">
 					<?php
 					printf(
 						/* translators: %s: search query. */
