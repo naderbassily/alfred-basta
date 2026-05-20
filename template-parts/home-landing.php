@@ -182,9 +182,8 @@ $blog_query       = new WP_Query(
 							$book_label = $book_terms[0]->name;
 						}
 
-						$book_excerpt = get_the_excerpt();
-						?>
-						<article class="book-card reveal <?php echo esc_attr( $delay_class ); ?>">
+							?>
+							<article class="book-card reveal <?php echo esc_attr( $delay_class ); ?>">
 							<a href="<?php the_permalink(); ?>" class="book-cover-link" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
 								<div class="book-cover-wrap">
 									<?php if ( has_post_thumbnail() ) : ?>
@@ -199,11 +198,10 @@ $blog_query       = new WP_Query(
 										<span>View Book</span>
 									</div>
 								</div>
-							</a>
-							<div class="book-genre"><?php echo esc_html( $book_label ); ?></div>
-							<h3 class="book-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-							<div class="book-desc"><?php echo esc_html( $book_excerpt ); ?></div>
-						</article>
+								</a>
+								<div class="book-genre"><?php echo esc_html( $book_label ); ?></div>
+								<h3 class="book-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+							</article>
 					<?php endwhile; ?>
 					<?php wp_reset_postdata(); ?>
 				<?php else : ?>
@@ -276,15 +274,15 @@ $blog_query       = new WP_Query(
 						<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
 					</div>
 					<p class="testimonial-text">
-						"Dr. Basta's writing on grief is unlike anything I've encountered. He holds
-						theological depth and raw pastoral compassion in the same hand. It gave me
-						language for my pain and unshakeable hope in God's faithfulness."
+						"Dr. Alfred Basta's unwavering support made this book possible and he has
+						been my beacon throughout my academic journey. Your wisdom and encouragement
+						have shaped not only my career but also my character."
 					</p>
 					<div class="testimonial-author">
-						<div class="author-avatar">SM</div>
+						<div class="author-avatar">SD</div>
 						<div>
-							<div class="author-info-name">Sarah M.</div>
-							<div class="author-info-role">Reader · Woodstock, GA</div>
+							<div class="author-info-name">Stephan DeLong</div>
+							<div class="author-info-role">Cybersecurity Researcher and Co-Author</div>
 						</div>
 					</div>
 				</div>
@@ -294,16 +292,16 @@ $blog_query       = new WP_Query(
 						<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
 					</div>
 					<p class="testimonial-text">
-						"I've adopted Dr. Basta's penetration testing textbook as the core text in
-						my graduate security program. It is the most thorough, field-ready guide
-						available. His ability to translate expert practice into teachable content
-						is exceptional."
+						"Great Book for Newbies... This book is designed to give readers of all
+						backgrounds and experience levels a well-researched and engaging introduction
+						to the fascinating realm of network security. It teaches the skills needed to
+						go from hoping a system is secure to knowing that it is."
 					</p>
 					<div class="testimonial-author">
-						<div class="author-avatar">RK</div>
+						<div class="author-avatar">VR</div>
 						<div>
-							<div class="author-info-name">Prof. Robert K.</div>
-							<div class="author-info-role">Cybersecurity Program Director</div>
+							<div class="author-info-name">Verified Reader</div>
+							<div class="author-info-role">IT Student Review</div>
 						</div>
 					</div>
 				</div>
@@ -313,15 +311,16 @@ $blog_query       = new WP_Query(
 						<span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
 					</div>
 					<p class="testimonial-text">
-						"Dr. Basta's textbooks got me through my OSCP certification. The way he
-						structures complex security concepts methodically, clearly, without losing
-						depth, is unlike any other author in this field. I keep his books on my desk."
+						"Dr. Basta's extensive curriculum and insights effectively close the
+						knowledge gap between the penetration tester and security analyst jobs.
+						His framework provides the lab exercises and real-world experience needed
+						to execute pen testing contracts without hassle."
 					</p>
 					<div class="testimonial-author">
-						<div class="author-avatar">JL</div>
+						<div class="author-avatar">EC</div>
 						<div>
-							<div class="author-info-name">James L.</div>
-							<div class="author-info-role">OSCP Certified · Security Engineer</div>
+							<div class="author-info-name">EC-Council</div>
+							<div class="author-info-role">International Council of E-Commerce Consultants</div>
 						</div>
 					</div>
 				</div>
@@ -424,54 +423,5 @@ $blog_query       = new WP_Query(
 
 	<div class="section-separator"></div>
 
-	<footer class="site-footer" id="contact">
-		<div class="footer-top">
-			<div class="footer-brand">
-				<div class="footer-brand-name">Alfred Basta</div>
-				<p class="footer-brand-desc">
-					Ph.D. Cryptography · Professor at Purdue Global &amp; Georgia State University ·
-					Author of 40+ books published by Wiley, Cengage &amp; Amazon ·
-					Chair, EC-Council CPENT Scheme Committee · Based in Woodstock, GA.
-				</p>
-				<div class="footer-social">
-					<a href="https://www.linkedin.com/in/alfred-basta-a94379249/" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
-						<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-							<path d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3C4.17 3 3.5 3.72 3.5 4.66c0 .92.65 1.66 1.71 1.66h.02c1.1 0 1.77-.74 1.77-1.66C6.98 3.72 6.35 3 5.25 3ZM20.5 12.56c0-3.52-1.88-5.16-4.39-5.16-2.02 0-2.93 1.12-3.43 1.9V8.5H9.31c.04.53 0 11.5 0 11.5h3.37v-6.42c0-.34.02-.68.12-.92.27-.68.89-1.39 1.94-1.39 1.37 0 1.92 1.05 1.92 2.59V20H20.5v-7.44Z" fill="currentColor"/>
-						</svg>
-					</a>
-				</div>
-			</div>
-
-			<div class="footer-col">
-				<div class="footer-col-title">Navigate</div>
-				<?php alfred_front_page_navigation( 'footerNavigationLinks', 'footer-links' ); ?>
-			</div>
-
-			<div class="footer-col">
-				<div class="footer-col-title">Books By Topic</div>
-				<ul class="footer-links">
-					<li><a href="#books">Cybersecurity &amp; Pen Testing</a></li>
-					<li><a href="#books">Mathematics &amp; Cryptography</a></li>
-					<li><a href="#books">Faith &amp; Spirituality</a></li>
-					<li><a href="#books">Linux &amp; Networking</a></li>
-					<li><a href="#books">Database Security</a></li>
-				</ul>
-			</div>
-
-			<div class="footer-col">
-				<div class="footer-col-title">Get in Touch</div>
-				<ul class="footer-links">
-					<li><a href="mailto:<?php echo esc_attr( antispambot( 'contact@alfredbasta.com' ) ); ?>"><?php echo esc_html( antispambot( 'contact@alfredbasta.com' ) ); ?></a></li>
-					<li><a href="https://cloudsecurityalliance.org/profiles/alfred-basta" target="_blank" rel="noopener">Cloud Security Alliance</a></li>
-					<li><a href="#contact">Speaking &amp; Consulting</a></li>
-					<li><a href="#contact">Publisher Inquiries</a></li>
-				</ul>
-			</div>
-		</div>
-
-		<div class="footer-bottom">
-			<p class="footer-copy">© <?php echo esc_html( wp_date( 'Y' ) ); ?> <span>Dr. Alfred Basta</span>. All rights reserved.</p>
-			<p class="footer-copy">Professor · Author · Cybersecurity Expert · Woodstock, GA</p>
-		</div>
-	</footer>
+	<?php alfred_custom_site_footer(); ?>
 </main>

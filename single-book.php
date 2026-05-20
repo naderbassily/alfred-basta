@@ -384,11 +384,10 @@ while ( have_posts() ) :
 								if ( ! empty( $related_book_terms ) && ! is_wp_error( $related_book_terms ) ) {
 									$related_book_label = $related_book_terms[0]->name;
 								}
-								?>
-								<div class="book-genre"><?php echo esc_html( $related_book_label ); ?></div>
-								<h3 class="book-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-								<div class="book-desc"><?php echo esc_html( get_the_excerpt() ); ?></div>
-							</article>
+									?>
+									<div class="book-genre"><?php echo esc_html( $related_book_label ); ?></div>
+									<h3 class="book-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+								</article>
 						<?php endwhile; ?>
 						<?php wp_reset_postdata(); ?>
 					</div>
@@ -398,56 +397,7 @@ while ( have_posts() ) :
 
 		<div class="section-separator"></div>
 
-		<footer class="site-footer" id="contact">
-			<div class="footer-top">
-				<div class="footer-brand">
-					<div class="footer-brand-name">Alfred Basta</div>
-					<p class="footer-brand-desc">
-						Ph.D. Cryptography · Professor at Purdue Global &amp; Georgia State University ·
-						Author of 40+ books published by Wiley, Cengage &amp; Amazon ·
-						Chair, EC-Council CPENT Scheme Committee · Based in Woodstock, GA.
-					</p>
-					<div class="footer-social">
-						<a href="https://www.linkedin.com/in/alfred-basta-a94379249/" class="social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
-							<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-								<path d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3C4.17 3 3.5 3.72 3.5 4.66c0 .92.65 1.66 1.71 1.66h.02c1.1 0 1.77-.74 1.77-1.66C6.98 3.72 6.35 3 5.25 3ZM20.5 12.56c0-3.52-1.88-5.16-4.39-5.16-2.02 0-2.93 1.12-3.43 1.9V8.5H9.31c.04.53 0 11.5 0 11.5h3.37v-6.42c0-.34.02-.68.12-.92.27-.68.89-1.39 1.94-1.39 1.37 0 1.92 1.05 1.92 2.59V20H20.5v-7.44Z" fill="currentColor"/>
-							</svg>
-						</a>
-					</div>
-				</div>
-
-				<div class="footer-col">
-					<div class="footer-col-title">Navigate</div>
-					<?php alfred_front_page_navigation( 'footerNavigationLinks', 'footer-links' ); ?>
-				</div>
-
-						<div class="footer-col">
-							<div class="footer-col-title">Books By Topic</div>
-							<ul class="footer-links">
-								<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>">Cybersecurity &amp; Pen Testing</a></li>
-								<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>">Mathematics &amp; Cryptography</a></li>
-								<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>">Faith &amp; Spirituality</a></li>
-								<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>">Linux &amp; Networking</a></li>
-								<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>">Database Security</a></li>
-							</ul>
-						</div>
-
-				<div class="footer-col">
-					<div class="footer-col-title">Get in Touch</div>
-					<ul class="footer-links">
-						<li><a href="mailto:<?php echo esc_attr( antispambot( 'contact@alfredbasta.com' ) ); ?>"><?php echo esc_html( antispambot( 'contact@alfredbasta.com' ) ); ?></a></li>
-						<li><a href="https://cloudsecurityalliance.org/profiles/alfred-basta" target="_blank" rel="noopener">Cloud Security Alliance</a></li>
-						<li><a href="<?php echo esc_url( alfred_get_front_page_anchor_url( '#contact' ) ); ?>">Speaking &amp; Consulting</a></li>
-						<li><a href="<?php echo esc_url( alfred_get_front_page_anchor_url( '#contact' ) ); ?>">Publisher Inquiries</a></li>
-					</ul>
-				</div>
-			</div>
-
-			<div class="footer-bottom">
-				<p class="footer-copy">© <?php echo esc_html( wp_date( 'Y' ) ); ?> <span>Dr. Alfred Basta</span>. All rights reserved.</p>
-				<p class="footer-copy">Professor · Author · Cybersecurity Expert · Woodstock, GA</p>
-			</div>
-		</footer>
+			<?php alfred_custom_site_footer(); ?>
 	</main>
 
 	<?php

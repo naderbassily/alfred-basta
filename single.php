@@ -54,27 +54,19 @@ while ( have_posts() ) :
 	$related_posts = new WP_Query( $related_args );
 	?>
 
-	<main id="primary" class="site-main single-book-page blog-page single-post-page">
-		<?php alfred_custom_site_navigation( __( 'Article navigation', 'alfred' ), 'site-nav-search-single-post' ); ?>
+		<main id="primary" class="site-main single-book-page blog-page single-post-page">
+			<?php alfred_custom_site_navigation( __( 'Article navigation', 'alfred' ), 'site-nav-search-single-post' ); ?>
 
-		<section class="book-hero blog-single-hero" id="home">
-			<div class="book-hero__backdrop"></div>
-			<div class="container book-hero__container blog-single-hero__container <?php echo has_post_thumbnail() ? '' : 'blog-single-hero__container--text-only'; ?>">
-				<?php if ( has_post_thumbnail() ) : ?>
-					<div class="book-hero__media reveal reveal-delay-1">
-						<div class="blog-single-hero__image-shell">
-							<?php the_post_thumbnail( 'large', array( 'class' => 'blog-single-hero__image' ) ); ?>
-						</div>
-					</div>
-				<?php endif; ?>
-
-				<div class="book-hero__content">
-					<div class="book-hero__eyebrow reveal"><?php esc_html_e( 'Author Blog', 'alfred' ); ?></div>
-					<h1 class="book-hero__title reveal reveal-delay-1"><?php the_title(); ?></h1>
-					<?php if ( has_excerpt() ) : ?>
-						<div class="book-hero__description reveal reveal-delay-2 visible">
-							<?php the_excerpt(); ?>
-						</div>
+			<section class="book-hero blog-single-hero" id="home">
+				<div class="book-hero__backdrop"></div>
+				<div class="container book-hero__container blog-single-hero__container blog-single-hero__container--text-only">
+					<div class="book-hero__content">
+						<div class="book-hero__eyebrow reveal"><?php esc_html_e( 'Author Blog', 'alfred' ); ?></div>
+						<h1 class="book-hero__title blog-single-hero__title reveal reveal-delay-1"><?php the_title(); ?></h1>
+						<?php if ( has_excerpt() ) : ?>
+							<div class="book-hero__description reveal reveal-delay-2 visible">
+								<?php the_excerpt(); ?>
+							</div>
 					<?php endif; ?>
 					<div class="book-hero__actions reveal reveal-delay-3">
 						<a href="<?php echo esc_url( alfred_get_blog_archive_url() ); ?>" class="btn-outline"><?php esc_html_e( 'All Articles', 'alfred' ); ?></a>
@@ -86,12 +78,12 @@ while ( have_posts() ) :
 
 		<div class="section-separator"></div>
 
-		<section class="section section-white blog-single-content-section">
-			<div class="container blog-single-layout">
-				<article id="post-<?php the_ID(); ?>" <?php post_class( 'blog-single-article reveal' ); ?>>
-					<div class="blog-single-article__content">
-						<?php
-						the_content();
+			<section class="section section-white blog-single-content-section">
+				<div class="container blog-single-layout">
+					<article id="post-<?php the_ID(); ?>" <?php post_class( 'blog-single-article' ); ?>>
+						<div class="blog-single-article__content">
+							<?php
+							the_content();
 
 						wp_link_pages(
 							array(

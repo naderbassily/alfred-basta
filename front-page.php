@@ -8,7 +8,7 @@
 get_header();
 
 $hero_image_uri  = '';
-$about_image_uri = 'http://alfred-basta.local/wp-content/uploads/2026/05/basta.jpg';
+$about_image_uri = '/wp-content/uploads/2026/05/basta.jpg';
 $front_page_has_editor_content = false;
 
 if ( file_exists( get_theme_file_path( 'assets/images/alfred-hero.jpg' ) ) ) {

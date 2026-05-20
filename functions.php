@@ -100,6 +100,9 @@ function alfred_setup() {
 			'flex-height' => true,
 		)
 	);
+
+	// Allow WordPress to output the Site Icon / favicon markup.
+	add_theme_support( 'site-icon' );
 }
 add_action( 'after_setup_theme', 'alfred_setup' );
 
@@ -114,6 +117,25 @@ function alfred_content_width() {
 	$GLOBALS['content_width'] = apply_filters( 'alfred_content_width', 640 );
 }
 add_action( 'after_setup_theme', 'alfred_content_width', 0 );
+
+/**
+ * Output the Google Analytics tag in the document head.
+ *
+ * @return void
+ */
+function alfred_output_google_tag() {
+	?>
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-35CC9FMDY6"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		gtag('config', 'G-35CC9FMDY6');
+	</script>
+	<?php
+}
+add_action( 'wp_head', 'alfred_output_google_tag', 5 );
 
 /**
  * Register widget area.
@@ -538,55 +560,33 @@ function alfred_custom_site_navigation( $aria_label, $search_id ) {
  * @return void
  */
 function alfred_custom_site_footer() {
-	?>
-	<footer class="site-footer" id="contact">
-		<div class="footer-top">
-			<div class="footer-brand">
-				<div class="footer-brand-name">Alfred Basta</div>
-				<p class="footer-brand-desc">
-					<?php esc_html_e( 'Ph.D. Cryptography · Professor at Purdue Global & Georgia State University · Author of 40+ books published by Wiley, Cengage & Amazon · Chair, EC-Council CPENT Scheme Committee · Based in Woodstock, GA.', 'alfred' ); ?>
-				</p>
-				<div class="footer-social">
-					<a href="https://www.linkedin.com/in/alfred-basta-a94379249/" class="social-link" aria-label="<?php esc_attr_e( 'LinkedIn', 'alfred' ); ?>" target="_blank" rel="noopener">
-						<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-							<path d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3C4.17 3 3.5 3.72 3.5 4.66c0 .92.65 1.66 1.71 1.66h.02c1.1 0 1.77-.74 1.77-1.66C6.98 3.72 6.35 3 5.25 3ZM20.5 12.56c0-3.52-1.88-5.16-4.39-5.16-2.02 0-2.93 1.12-3.43 1.9V8.5H9.31c.04.53 0 11.5 0 11.5h3.37v-6.42c0-.34.02-.68.12-.92.27-.68.89-1.39 1.94-1.39 1.37 0 1.92 1.05 1.92 2.59V20H20.5v-7.44Z" fill="currentColor"/>
-						</svg>
-					</a>
+		?>
+			<footer class="site-footer" id="contact">
+				<div class="footer-top">
+					<div class="footer-brand">
+						<div class="footer-brand-name">Alfred Basta</div>
+					</div>
+
+					<div class="footer-nav">
+						<?php alfred_front_page_navigation( 'footerNavigationLinks', 'footer-links footer-links--inline' ); ?>
+					</div>
+
+					<div class="footer-contact">
+						<div class="footer-col-title"><?php esc_html_e( 'Get in Touch', 'alfred' ); ?></div>
+						<a class="footer-contact__email" href="mailto:<?php echo esc_attr( antispambot( 'contact@alfredbasta.com' ) ); ?>"><?php echo esc_html( antispambot( 'contact@alfredbasta.com' ) ); ?></a>
+						<a href="https://www.linkedin.com/in/alfred-basta-a94379249/" class="footer-social-link" aria-label="<?php esc_attr_e( 'LinkedIn', 'alfred' ); ?>" target="_blank" rel="noopener">
+							<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+								<path d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3C4.17 3 3.5 3.72 3.5 4.66c0 .92.65 1.66 1.71 1.66h.02c1.1 0 1.77-.74 1.77-1.66C6.98 3.72 6.35 3 5.25 3ZM20.5 12.56c0-3.52-1.88-5.16-4.39-5.16-2.02 0-2.93 1.12-3.43 1.9V8.5H9.31c.04.53 0 11.5 0 11.5h3.37v-6.42c0-.34.02-.68.12-.92.27-.68.89-1.39 1.94-1.39 1.37 0 1.92 1.05 1.92 2.59V20H20.5v-7.44Z" fill="currentColor"/>
+							</svg>
+						</a>
+					</div>
 				</div>
-			</div>
 
-			<div class="footer-col">
-				<div class="footer-col-title"><?php esc_html_e( 'Navigate', 'alfred' ); ?></div>
-				<?php alfred_front_page_navigation( 'footerNavigationLinks', 'footer-links' ); ?>
+			<div class="footer-bottom">
+				<p class="footer-copy">© <?php echo esc_html( wp_date( 'Y' ) ); ?> <span><?php esc_html_e( 'Dr. Alfred Basta', 'alfred' ); ?></span>. <?php esc_html_e( 'All rights reserved.', 'alfred' ); ?></p>
+				<p class="footer-copy"><?php esc_html_e( 'Professor · Author · Cybersecurity Expert', 'alfred' ); ?></p>
 			</div>
-
-			<div class="footer-col">
-				<div class="footer-col-title"><?php esc_html_e( 'Books By Topic', 'alfred' ); ?></div>
-				<ul class="footer-links">
-					<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>"><?php esc_html_e( 'Cybersecurity & Pen Testing', 'alfred' ); ?></a></li>
-					<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>"><?php esc_html_e( 'Mathematics & Cryptography', 'alfred' ); ?></a></li>
-					<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>"><?php esc_html_e( 'Faith & Spirituality', 'alfred' ); ?></a></li>
-					<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>"><?php esc_html_e( 'Linux & Networking', 'alfred' ); ?></a></li>
-					<li><a href="<?php echo esc_url( alfred_get_book_archive_url() ); ?>"><?php esc_html_e( 'Database Security', 'alfred' ); ?></a></li>
-				</ul>
-			</div>
-
-			<div class="footer-col">
-				<div class="footer-col-title"><?php esc_html_e( 'Get in Touch', 'alfred' ); ?></div>
-				<ul class="footer-links">
-					<li><a href="mailto:<?php echo esc_attr( antispambot( 'contact@alfredbasta.com' ) ); ?>"><?php echo esc_html( antispambot( 'contact@alfredbasta.com' ) ); ?></a></li>
-					<li><a href="https://cloudsecurityalliance.org/profiles/alfred-basta" target="_blank" rel="noopener"><?php esc_html_e( 'Cloud Security Alliance', 'alfred' ); ?></a></li>
-					<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Speaking & Consulting', 'alfred' ); ?></a></li>
-					<li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>"><?php esc_html_e( 'Publisher Inquiries', 'alfred' ); ?></a></li>
-				</ul>
-			</div>
-		</div>
-
-		<div class="footer-bottom">
-			<p class="footer-copy">© <?php echo esc_html( wp_date( 'Y' ) ); ?> <span><?php esc_html_e( 'Dr. Alfred Basta', 'alfred' ); ?></span>. <?php esc_html_e( 'All rights reserved.', 'alfred' ); ?></p>
-			<p class="footer-copy"><?php esc_html_e( 'Professor · Author · Cybersecurity Expert · Woodstock, GA', 'alfred' ); ?></p>
-		</div>
-	</footer>
+		</footer>
 	<?php
 }
 
@@ -1153,7 +1153,7 @@ function alfred_handle_contact_form_submission() {
 		exit;
 	}
 
-	$recipient = get_option( 'admin_email' );
+	$recipient = 'contact@alfredbasta.com';
 	$body      = sprintf(
 		"Name: %1\$s\nEmail: %2\$s\nSubject: %3\$s\n\nMessage:\n%4\$s",
 		$name,
@@ -1162,6 +1162,7 @@ function alfred_handle_contact_form_submission() {
 		$message
 	);
 	$headers   = array(
+		'From: Alfred Basta Site <contact@alfredbasta.com>',
 		'Reply-To: ' . $name . ' <' . $email . '>',
 	);
 
