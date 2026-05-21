@@ -658,6 +658,7 @@ body.home a {
 	grid-template-columns: 1fr 1fr;
 	gap: 0;
 	min-height: 1000px;
+	height: 1000px;
 }
 
 .about-image-col {
@@ -689,7 +690,7 @@ body.home a {
 
 .about-content-col {
 	background: var(--black);
-	padding: 100px 80px;
+	padding: 72px 80px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -697,11 +698,11 @@ body.home a {
 
 .about-quote {
 	font-family: var(--serif);
-	font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+	font-size: clamp(1.05rem, 1.55vw, 1.34rem);
 	font-style: italic;
 	color: rgba(255, 255, 255, 0.85);
-	line-height: 1.7;
-	margin-bottom: 40px;
+	line-height: 1.58;
+	margin-bottom: 28px;
 	position: relative;
 	padding-left: 28px;
 }
@@ -723,8 +724,8 @@ body.home a {
 .about-stats {
 	display: flex;
 	gap: 48px;
-	margin-top: 48px;
-	padding-top: 48px;
+	margin-top: 34px;
+	padding-top: 34px;
 	border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -749,7 +750,7 @@ body.home a {
 }
 
 .about-cta {
-	margin-top: 40px;
+	margin-top: 28px;
 }
 
 .testimonials-section {
