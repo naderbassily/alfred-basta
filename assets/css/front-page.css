@@ -1525,13 +1525,25 @@ body.home a {
 
 	.hero-content {
 		width: 100%;
-		padding: 0 24px 50px;
+		padding: 0 24px 86px;
 		margin: 0;
 		background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 60%, transparent);
 	}
 
 	.hero-name {
 		font-size: 3.5rem;
+	}
+
+	.scroll-indicator {
+		left: auto;
+		right: 24px;
+		bottom: 22px;
+		transform: none;
+		align-items: flex-end;
+	}
+
+	.scroll-line {
+		height: 32px;
 	}
 
 	.books-grid {
