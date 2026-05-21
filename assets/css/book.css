@@ -616,8 +616,7 @@ body.alfred-about-page {
 }
 
 .book-archive-controls {
-	display: grid;
-	gap: 24px;
+	display: block;
 	z-index: 12;
 	padding: 28px;
 	border: 1px solid rgba(201, 162, 84, 0.18);
@@ -627,6 +626,15 @@ body.alfred-about-page {
 		var(--offwhite);
 	box-shadow: 0 24px 70px rgba(17, 17, 17, 0.08);
 	backdrop-filter: blur(18px);
+}
+
+.book-archive-controls__summary {
+	display: none;
+}
+
+.book-archive-controls__body {
+	display: grid;
+	gap: 24px;
 }
 
 .book-archive-search,
@@ -1796,7 +1804,7 @@ body.alfred-about-page {
 
 @media (max-width: 768px) {
 	.book-hero {
-		padding: 140px 0 76px;
+		padding: 128px 24px 64px;
 	}
 
 	.book-hero__title {
@@ -1864,8 +1872,59 @@ body.alfred-about-page {
 	}
 
 	.book-archive-controls {
+		padding: 0;
+		border-radius: 8px;
+		overflow: hidden;
+	}
+
+	.book-archive-controls__summary {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		min-height: 58px;
+		padding: 0 18px;
+		color: var(--black2);
+		font-size: 0.78rem;
+		font-weight: 800;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.book-archive-controls__summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.book-archive-controls__summary::after {
+		content: "";
+		width: 10px;
+		height: 10px;
+		border-right: 2px solid rgba(17, 17, 17, 0.62);
+		border-bottom: 2px solid rgba(17, 17, 17, 0.62);
+		transform: rotate(45deg) translateY(-2px);
+		transition: transform 0.2s ease;
+	}
+
+	.book-archive-controls[open] .book-archive-controls__summary {
+		border-bottom: 1px solid rgba(201, 162, 84, 0.16);
+	}
+
+	.book-archive-controls[open] .book-archive-controls__summary::after {
+		transform: rotate(225deg) translate(-2px, -2px);
+	}
+
+	.book-archive-controls__summary-meta {
+		margin-left: auto;
+		color: var(--gray2);
+		font-size: 0.68rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+	}
+
+	.book-archive-controls__body {
 		padding: 22px 18px;
-		border-radius: 22px;
 	}
 
 	.book-archive-select-wrap {
@@ -1898,9 +1957,13 @@ body.alfred-about-page {
 }
 
 @media (max-width: 520px) {
-	.book-archive-grid,
 	.blog-archive-grid {
 		grid-template-columns: 1fr;
+	}
+
+	.book-archive-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 18px;
 	}
 
 	.papers-grid {

@@ -148,44 +148,50 @@ $active_filters  = ! empty( $selected_genres ) || '' !== $selected_search;
 
 			<div class="book-archive-layout">
 				<aside class="book-archive-sidebar reveal reveal-delay-2">
-					<div class="book-archive-controls" data-book-controls>
-						<div class="book-archive-search">
-							<label class="book-archive-controls__label" for="book-search"><?php esc_html_e( 'Search titles', 'alfred' ); ?></label>
-							<input id="book-search" class="book-archive-search__input" type="search" value="<?php echo esc_attr( $selected_search ); ?>" placeholder="<?php esc_attr_e( 'Search by title, description, or topic', 'alfred' ); ?>" data-book-search-input>
-						</div>
+					<details class="book-archive-controls" data-book-controls data-active-filters="<?php echo esc_attr( $active_filters ? 'true' : 'false' ); ?>" open>
+						<summary class="book-archive-controls__summary">
+							<span><?php esc_html_e( 'Filters & Sort', 'alfred' ); ?></span>
+							<span class="book-archive-controls__summary-meta"><?php echo esc_html( $active_filters ? __( 'Active filters', 'alfred' ) : __( 'Tap to refine', 'alfred' ) ); ?></span>
+						</summary>
+						<div class="book-archive-controls__body">
+							<div class="book-archive-search">
+								<label class="book-archive-controls__label" for="book-search"><?php esc_html_e( 'Search titles', 'alfred' ); ?></label>
+								<input id="book-search" class="book-archive-search__input" type="search" value="<?php echo esc_attr( $selected_search ); ?>" placeholder="<?php esc_attr_e( 'Search by title, description, or topic', 'alfred' ); ?>" data-book-search-input>
+							</div>
 
-						<div class="book-archive-sort">
-							<label class="book-archive-controls__label" for="book-sort"><?php esc_html_e( 'Sort by', 'alfred' ); ?></label>
-							<div class="book-archive-select-wrap">
-								<select id="book-sort" name="sort" class="book-archive-select" data-book-sort>
-									<option value="title_asc" <?php selected( $selected_sort, 'title_asc' ); ?>><?php esc_html_e( 'Title (A-Z)', 'alfred' ); ?></option>
-									<option value="publication_date_desc" <?php selected( $selected_sort, 'publication_date_desc' ); ?>><?php esc_html_e( 'Publication Date (Newest)', 'alfred' ); ?></option>
-									<option value="publication_date_asc" <?php selected( $selected_sort, 'publication_date_asc' ); ?>><?php esc_html_e( 'Publication Date (Oldest)', 'alfred' ); ?></option>
-								</select>
+							<div class="book-archive-sort">
+								<label class="book-archive-controls__label" for="book-sort"><?php esc_html_e( 'Sort by', 'alfred' ); ?></label>
+								<div class="book-archive-select-wrap">
+									<select id="book-sort" name="sort" class="book-archive-select" data-book-sort>
+										<option value="title_asc" <?php selected( $selected_sort, 'title_asc' ); ?>><?php esc_html_e( 'Title (A-Z)', 'alfred' ); ?></option>
+										<option value="publication_date_desc" <?php selected( $selected_sort, 'publication_date_desc' ); ?>><?php esc_html_e( 'Publication Date (Newest)', 'alfred' ); ?></option>
+										<option value="publication_date_asc" <?php selected( $selected_sort, 'publication_date_asc' ); ?>><?php esc_html_e( 'Publication Date (Oldest)', 'alfred' ); ?></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="book-archive-filters">
+								<div class="book-archive-controls__label"><?php esc_html_e( 'Filter by genre', 'alfred' ); ?></div>
+								<?php if ( ! empty( $genre_terms ) && ! is_wp_error( $genre_terms ) ) : ?>
+									<div class="book-archive-checkboxes">
+										<?php foreach ( $genre_terms as $genre_term ) : ?>
+											<label class="book-archive-checkbox">
+												<input type="checkbox" name="genre[]" value="<?php echo esc_attr( $genre_term->slug ); ?>" data-book-genre <?php checked( in_array( $genre_term->slug, $selected_genres, true ) ); ?>>
+												<span><?php echo esc_html( $genre_term->name ); ?></span>
+											</label>
+										<?php endforeach; ?>
+									</div>
+								<?php else : ?>
+									<p class="book-archive-controls__empty"><?php esc_html_e( 'No genres available yet.', 'alfred' ); ?></p>
+								<?php endif; ?>
+							</div>
+
+							<div class="book-archive-sidebar-actions">
+								<button type="button" class="book-archive-reset" data-book-reset><?php esc_html_e( 'Reset filters', 'alfred' ); ?></button>
+								<a href="#home" class="book-archive-backtop"><?php esc_html_e( 'Back to Top', 'alfred' ); ?></a>
 							</div>
 						</div>
-
-						<div class="book-archive-filters">
-							<div class="book-archive-controls__label"><?php esc_html_e( 'Filter by genre', 'alfred' ); ?></div>
-							<?php if ( ! empty( $genre_terms ) && ! is_wp_error( $genre_terms ) ) : ?>
-								<div class="book-archive-checkboxes">
-									<?php foreach ( $genre_terms as $genre_term ) : ?>
-										<label class="book-archive-checkbox">
-											<input type="checkbox" name="genre[]" value="<?php echo esc_attr( $genre_term->slug ); ?>" data-book-genre <?php checked( in_array( $genre_term->slug, $selected_genres, true ) ); ?>>
-											<span><?php echo esc_html( $genre_term->name ); ?></span>
-										</label>
-									<?php endforeach; ?>
-								</div>
-							<?php else : ?>
-								<p class="book-archive-controls__empty"><?php esc_html_e( 'No genres available yet.', 'alfred' ); ?></p>
-							<?php endif; ?>
-						</div>
-
-						<div class="book-archive-sidebar-actions">
-							<button type="button" class="book-archive-reset" data-book-reset><?php esc_html_e( 'Reset filters', 'alfred' ); ?></button>
-							<a href="#home" class="book-archive-backtop"><?php esc_html_e( 'Back to Top', 'alfred' ); ?></a>
-						</div>
-					</div>
+					</details>
 				</aside>
 
 				<div class="book-archive-main">
@@ -505,6 +511,29 @@ $active_filters  = ! empty( $selected_genres ) || '' !== $selected_search;
 		});
 	</script>
 <?php endif; ?>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const controls = document.querySelector('[data-book-controls]');
+
+		if (!controls || controls.tagName.toLowerCase() !== 'details') {
+			return;
+		}
+
+		const mobileQuery = window.matchMedia('(max-width: 640px)');
+		const hasActiveFilters = controls.dataset.activeFilters === 'true';
+
+		const syncFilterDisclosure = function () {
+			controls.open = !mobileQuery.matches || hasActiveFilters;
+		};
+
+		syncFilterDisclosure();
+
+		if (mobileQuery.addEventListener) {
+			mobileQuery.addEventListener('change', syncFilterDisclosure);
+		}
+	});
+</script>
 
 <?php
 wp_reset_postdata();
