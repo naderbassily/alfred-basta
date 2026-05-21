@@ -1954,6 +1954,51 @@ body.alfred-about-page {
 	.utility-search-form button {
 		width: 100%;
 	}
+
+	.blog-archive-card {
+		display: flex;
+		flex-direction: column;
+		max-height: 430px;
+	}
+
+	.blog-archive-card .blog-card-image {
+		flex: 0 0 168px;
+		height: 168px;
+		aspect-ratio: auto;
+	}
+
+	.blog-archive-card .blog-card-body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		min-height: 0;
+		padding: 20px;
+		overflow: hidden;
+	}
+
+	.blog-archive-card .blog-meta {
+		margin-bottom: 10px;
+	}
+
+	.blog-archive-card .blog-card-title {
+		display: -webkit-box;
+		margin-bottom: 10px;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+	}
+
+	.blog-archive-card .blog-card-excerpt {
+		display: -webkit-box;
+		margin-bottom: 16px;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+	}
+
+	.blog-archive-card .blog-read-more {
+		margin-top: auto;
+	}
 }
 
 @media (max-width: 520px) {
