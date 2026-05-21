@@ -1419,12 +1419,30 @@ body.home a {
 		grid-template-columns: repeat(2, 1fr);
 	}
 
-	.testimonials-track {
-		grid-template-columns: repeat(2, 1fr);
+	.site-nav {
+		gap: 18px;
+		padding-right: 32px;
+		padding-left: 32px;
 	}
 
-	.blog-grid {
-		grid-template-columns: repeat(2, 1fr);
+	.site-nav.scrolled {
+		padding-right: 32px;
+		padding-left: 32px;
+	}
+
+	.nav-links {
+		gap: 30px;
+	}
+
+	.nav-search .nav-search__input {
+		width: 160px;
+		padding-left: 24px;
+	}
+
+	.nav-search__submit {
+		padding: 0 14px;
+		font-size: 0.72rem;
+		letter-spacing: 0.1em;
 	}
 
 	.footer-top {

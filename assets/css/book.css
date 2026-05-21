@@ -1757,6 +1757,11 @@ body.alfred-about-page {
 }
 
 @media (max-width: 1100px) {
+	.book-hero {
+		padding-right: 56px;
+		padding-left: 56px;
+	}
+
 	.book-hero__container,
 	.single-book-story__container,
 	.about-page-content__container,
