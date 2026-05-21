@@ -7,10 +7,64 @@
  * @package Alfred_Basta
  */
 
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
 if ( ! defined( '_S_VERSION' ) ) {
 	// Replace the version number of the theme on each release.
-	define( '_S_VERSION', '1.0.0' );
+	define( '_S_VERSION', '1.0.1' );
 }
+
+/**
+ * Read a GitHub token for private repository update checks.
+ *
+ * Prefer defining ALFRED_BASTA_GITHUB_TOKEN in wp-config.php. Environment
+ * variables are also supported for hosts that manage secrets outside PHP files.
+ *
+ * @return string
+ */
+function alfred_get_github_update_token() {
+	if ( defined( 'ALFRED_BASTA_GITHUB_TOKEN' ) && ALFRED_BASTA_GITHUB_TOKEN ) {
+		return (string) ALFRED_BASTA_GITHUB_TOKEN;
+	}
+
+	$token = getenv( 'ALFRED_BASTA_GITHUB_TOKEN' );
+
+	return $token ? (string) $token : '';
+}
+
+/**
+ * Initialize GitHub-based theme updates.
+ *
+ * Plugin Update Checker reads the local theme version from style.css and compares
+ * it with GitHub releases, tags, or the configured stable branch.
+ */
+function alfred_init_github_theme_updater() {
+	$puc_loader = get_template_directory() . '/inc/plugin-update-checker/plugin-update-checker.php';
+
+	if ( ! file_exists( $puc_loader ) ) {
+		return;
+	}
+
+	require_once $puc_loader;
+
+	if ( ! class_exists( PucFactory::class ) ) {
+		return;
+	}
+
+	$update_checker = PucFactory::buildUpdateChecker(
+		'https://github.com/naderbassily/alfred-basta/',
+		__FILE__,
+		'alfred'
+	);
+
+	$update_checker->setBranch( 'main' );
+
+	$github_token = alfred_get_github_update_token();
+	if ( '' !== $github_token ) {
+		$update_checker->setAuthentication( $github_token );
+	}
+}
+alfred_init_github_theme_updater();
 
 /**
  * Sets up theme defaults and registers support for various WordPress features.
