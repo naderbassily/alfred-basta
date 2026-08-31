@@ -65,22 +65,9 @@ if ( $front_page_id ) {
 $book_query       = new WP_Query(
 	array(
 		'post_type'           => 'book',
-		'posts_per_page'      => 4,
+		'posts_per_page'      => 8,
 		'post_status'         => 'publish',
 		'ignore_sticky_posts' => true,
-		'meta_query'          => array(
-			'relation' => 'OR',
-			array(
-				'key'     => 'feature_on_homepage',
-				'value'   => array( '1', 1, 'Yes', 'yes', 'true', true ),
-				'compare' => 'IN',
-			),
-			array(
-				'key'     => 'feature_on_homepage',
-				'value'   => '"Yes"',
-				'compare' => 'LIKE',
-			),
-		),
 	)
 );
 $blog_query       = new WP_Query(
